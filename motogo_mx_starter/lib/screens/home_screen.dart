@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/lock_service.dart';
 import '../theme/app_theme.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,6 +16,16 @@ class HomeScreen extends StatelessWidget {
             const Text('MotoGo MX'),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.lock_outline),
+            tooltip: 'Bloquear aplicación',
+            onPressed: () {
+              LockService.sessionUnlocked = false;
+              Navigator.of(context).pushReplacementNamed('/lock');
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

@@ -21,6 +21,9 @@ dependencies:
   # backend is connected
   shared_preferences: ^2.2.0
 
+  # Huella digital / Face ID para el bloqueo de acceso obligatorio
+  local_auth: ^2.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

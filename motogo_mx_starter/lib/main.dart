@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config/app_config.dart';
 import 'theme/app_theme.dart';
+import 'screens/app_gate_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/lock_screen.dart';
+import 'screens/pin_setup_screen.dart';
 import 'screens/request_ride_screen.dart';
 import 'screens/driver_screen.dart';
 import 'screens/admin_screen.dart';
@@ -43,7 +46,10 @@ class MotoGoApp extends StatelessWidget {
       theme: AppTheme.darkTheme,
       initialRoute: '/',
       routes: {
-        '/': (_) => const HomeScreen(),
+        '/': (_) => const AppGateScreen(),
+        '/pin-setup': (_) => const PinSetupScreen(nextRoute: '/home'),
+        '/lock': (_) => const LockScreen(nextRoute: '/home'),
+        '/home': (_) => const HomeScreen(),
         '/request': (_) => const RequestRideScreen(),
         '/driver': (_) => const DriverScreen(),
         '/admin': (_) => const AdminScreen(),
