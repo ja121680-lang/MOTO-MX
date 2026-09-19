@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/request_ride_screen.dart';
 import 'screens/driver_screen.dart';
@@ -28,10 +29,7 @@ class MotoGoApp extends StatelessWidget {
     return MaterialApp(
       title: 'MotoGo MX',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
+      theme: AppTheme.darkTheme,
       initialRoute: '/',
       routes: {
         '/': (_) => const HomeScreen(),

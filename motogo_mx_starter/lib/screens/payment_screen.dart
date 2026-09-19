@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -16,6 +17,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     const fare = 90.0;
     const platformFee = fare * 0.08;
     const driverNet = fare - platformFee;
+    final isPaid = status == 'Pagado';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Pago')),
@@ -24,23 +26,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
         children: [
           Card(
             child: Column(
-              children: const [
-                ListTile(
+              children: [
+                const ListTile(
                   title: Text('Total del viaje'),
-                  trailing: Text('\$90.00 MXN'),
+                  trailing: Text('\$90.00 MXN', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 ListTile(
-                  title: Text('Comisión MotoGo MX (8%)'),
-                  trailing: Text('\$7.20'),
+                  title: const Text('Comisión MotoGo MX (8%)'),
+                  trailing: Text('\$${platformFee.toStringAsFixed(2)}', style: const TextStyle(color: AppTheme.textMuted)),
                 ),
+                const Divider(height: 1),
                 ListTile(
-                  title: Text('Neto conductor'),
-                  trailing: Text('\$82.80'),
+                  title: const Text('Neto conductor', style: TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Text(
+                    '\$${driverNet.toStringAsFixed(2)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.success),
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           DropdownButtonFormField<String>(
             value: method,
             items: const [
@@ -49,21 +55,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
               DropdownMenuItem(value: 'QR', child: Text('QR')),
             ],
             onChanged: (v) => setState(() => method = v ?? 'Efectivo'),
-            decoration: const InputDecoration(
-              labelText: 'Método de pago',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Método de pago'),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           FilledButton(
-            onPressed: () => setState(() => status = 'Pagado'),
+            onPressed: isPaid ? null : () => setState(() => status = 'Pagado'),
             child: const Text('Simular pago completado'),
           ),
-          const SizedBox(height: 12),
-          Text(
-            'Estado: $status',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          const SizedBox(height: 16),
+          Center(
+            child: StatusBadge(
+              label: status.toUpperCase(),
+              color: isPaid ? AppTheme.success : AppTheme.warning,
+            ),
           ),
         ],
       ),
