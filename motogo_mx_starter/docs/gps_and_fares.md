@@ -35,7 +35,7 @@ Estos valores son **solo configuración de prototipo**, no una tarifa comercial 
 
 ## Comisión
 Después de determinar la tarifa final:
-- plataforma = 8%
+- plataforma = 10%
 - conductor = 92%
 
 La comisión se calcula en backend y nunca se confía al teléfono.

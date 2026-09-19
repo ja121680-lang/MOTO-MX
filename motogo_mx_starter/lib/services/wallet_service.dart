@@ -1,3 +1,4 @@
+import '../config/pricing_config.dart';
 import '../models/wallet.dart';
 
 class WalletService {
@@ -8,24 +9,26 @@ class WalletService {
       available: 846.50,
       pending: 120.00,
       lifetimeEarnings: 6840.00,
-      lifetimePlatformFees: 547.20,
+      lifetimePlatformFees: 684.00,
     );
   }
 
   List<WalletTransaction> demoTransactions() {
+    const demoFare = 90.0;
+    final fee = demoFare * PricingConfig.platformFeeRate;
     return [
       WalletTransaction(
         id: 'tx_1',
         kind: 'trip_credit',
         description: 'Viaje completado #MGX-1048',
-        amount: 82.80,
+        amount: demoFare - fee,
         createdAt: DateTime.now().subtract(const Duration(hours: 2)),
       ),
       WalletTransaction(
         id: 'tx_2',
         kind: 'platform_fee',
-        description: 'Comisión MotoGo MX 8%',
-        amount: -7.20,
+        description: 'Comisión MotoGo MX ${(PricingConfig.platformFeeRate * 100).toStringAsFixed(0)}%',
+        amount: -fee,
         createdAt: DateTime.now().subtract(const Duration(hours: 2)),
       ),
       WalletTransaction(

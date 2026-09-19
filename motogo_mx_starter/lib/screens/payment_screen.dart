@@ -1,21 +1,44 @@
 import 'package:flutter/material.dart';
+import '../config/pricing_config.dart';
+import '../models/trip_record.dart';
+import '../services/trip_ledger_service.dart';
+import '../theme/app_theme.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  const PaymentScreen({super.key, this.tripId, this.route = 'Viaje', this.fare = 90.0});
+
+  final String? tripId;
+  final String route;
+  final double fare;
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  String method = 'Efectivo';
+  final _ledger = TripLedgerService();
+  MetodoPago method = MetodoPago.efectivo;
   String status = 'Pendiente';
+
+  Future<void> _confirmarPago() async {
+    await _ledger.addTrip(TripRecord(
+      id: widget.tripId ?? 'MGX-${DateTime.now().millisecondsSinceEpoch}',
+      route: widget.route,
+      fare: widget.fare,
+      metodoPago: method,
+      completedAt: DateTime.now(),
+    ));
+    if (!mounted) return;
+    setState(() => status = 'Pagado');
+  }
 
   @override
   Widget build(BuildContext context) {
-    const fare = 90.0;
-    const platformFee = fare * 0.08;
-    const driverNet = fare - platformFee;
+    final fare = widget.fare;
+    final platformFee = fare * PricingConfig.platformFeeRate;
+    final driverNet = fare - platformFee;
+    final feePct = (PricingConfig.platformFeeRate * 100).toStringAsFixed(0);
+    final isPaid = status == 'Pagado';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Pago')),
@@ -24,46 +47,46 @@ class _PaymentScreenState extends State<PaymentScreen> {
         children: [
           Card(
             child: Column(
-              children: const [
+              children: [
                 ListTile(
-                  title: Text('Total del viaje'),
-                  trailing: Text('\$90.00 MXN'),
+                  title: const Text('Total del viaje'),
+                  trailing: Text('\$${fare.toStringAsFixed(2)} MXN', style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 ListTile(
-                  title: Text('Comisión MotoGo MX (8%)'),
-                  trailing: Text('\$7.20'),
+                  title: Text('Comisión MotoGo MX ($feePct%)'),
+                  trailing: Text('\$${platformFee.toStringAsFixed(2)}', style: const TextStyle(color: AppTheme.textMuted)),
                 ),
+                const Divider(height: 1),
                 ListTile(
-                  title: Text('Neto conductor'),
-                  trailing: Text('\$82.80'),
+                  title: const Text('Neto conductor', style: TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Text(
+                    '\$${driverNet.toStringAsFixed(2)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.success),
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          DropdownButtonFormField<String>(
+          const SizedBox(height: 16),
+          DropdownButtonFormField<MetodoPago>(
             value: method,
-            items: const [
-              DropdownMenuItem(value: 'Efectivo', child: Text('Efectivo')),
-              DropdownMenuItem(value: 'Tarjeta', child: Text('Tarjeta')),
-              DropdownMenuItem(value: 'QR', child: Text('QR')),
-            ],
-            onChanged: (v) => setState(() => method = v ?? 'Efectivo'),
-            decoration: const InputDecoration(
-              labelText: 'Método de pago',
-              border: OutlineInputBorder(),
-            ),
+            items: MetodoPago.values
+                .map((m) => DropdownMenuItem(value: m, child: Text(m.label)))
+                .toList(),
+            onChanged: isPaid ? null : (v) => setState(() => method = v ?? MetodoPago.efectivo),
+            decoration: const InputDecoration(labelText: 'Método de pago'),
+          ),
+          const SizedBox(height: 20),
+          FilledButton(
+            onPressed: isPaid ? null : _confirmarPago,
+            child: const Text('Confirmar pago completado'),
           ),
           const SizedBox(height: 16),
-          FilledButton(
-            onPressed: () => setState(() => status = 'Pagado'),
-            child: const Text('Simular pago completado'),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Estado: $status',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          Center(
+            child: StatusBadge(
+              label: status.toUpperCase(),
+              color: isPaid ? AppTheme.success : AppTheme.warning,
+            ),
           ),
         ],
       ),
