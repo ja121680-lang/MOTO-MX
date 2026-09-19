@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'config/app_config.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/request_ride_screen.dart';
@@ -17,7 +19,15 @@ import 'screens/trip_history_screen.dart';
 import 'screens/rating_screen.dart';
 import 'screens/payment_screen.dart';
 
-void main() {
+Future<void> main() async {
+  // Only connects when SUPABASE_URL/SUPABASE_ANON_KEY are passed via
+  // --dart-define — see lib/config/app_config.dart. Without them the app
+  // stays fully usable in local/demo mode (DriverLocationService falls
+  // back to the simulated route instead of failing).
+  if (AppConfig.isConfigured) {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Supabase.initialize(url: AppConfig.supabaseUrl, publishableKey: AppConfig.supabaseAnonKey);
+  }
   runApp(const MotoGoApp());
 }
 

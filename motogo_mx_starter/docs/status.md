@@ -22,7 +22,8 @@
 - Función transaccional inicial de aceptación de viaje
 - Función inicial de finalización con comisión 8% y wallet
 
-- Simulación de ubicación en tiempo real
+- GPS real del dispositivo vía `geolocator` (DriverLocationService.watchDeviceLocation) — funciona sin backend
+- Seguimiento en vivo por Supabase Realtime (trip_locations) listo en código — se activa solo con SUPABASE_URL/SUPABASE_ANON_KEY reales via --dart-define; sin ellas cae de forma visible ("DEMO" en vez de "EN VIVO") a la ruta simulada anterior
 - Pantalla de seguimiento GPS demo
 - Cálculo de tarifa configurable
 - Vista de conductores cercanos
@@ -39,7 +40,10 @@
 
 ## Aún requiere integración real
 - autenticación OTP
-- mapas/GPS
+- proyecto Supabase real conectado (URL/anon key) para que el seguimiento en vivo deje de caer en modo DEMO
+- carpetas android/ios generadas (`flutter create .`) + permisos nativos de ubicación (el starter solo tiene `lib/`, sin esas carpetas geolocator no puede pedir permiso en un dispositivo real todavía)
+- conectar DriverLocationService.publishDeviceLocation() al lado del conductor durante un viaje activo (el servicio ya existe, falta wirearlo en la pantalla del conductor)
+- mapas visuales (el marcador en pantalla ya usa datos reales; falta el mapa de fondo)
 - rutas/distancia/ETA
 - notificaciones push
 - almacenamiento real de documentos

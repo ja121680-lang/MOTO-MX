@@ -9,6 +9,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Real device GPS (driver location capture)
+  geolocator: ^13.0.0
+
+  # Live location sharing (Supabase Realtime, see docs/realtime_flow.md);
+  # works fully offline in demo mode until SUPABASE_URL/SUPABASE_ANON_KEY
+  # are provided via --dart-define — see lib/config/app_config.dart
+  supabase_flutter: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,39 +1,47 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/location_point.dart';
-import '../services/mock_location_service.dart';
+import '../services/driver_location_service.dart';
 import '../theme/app_theme.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
-  const LiveTrackingScreen({super.key});
+  const LiveTrackingScreen({super.key, this.tripId = 'demo-trip'});
+
+  final String tripId;
 
   @override
   State<LiveTrackingScreen> createState() => _LiveTrackingScreenState();
 }
 
 class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
-  final service = MockLocationService();
+  final service = DriverLocationService();
   StreamSubscription<LocationPoint>? subscription;
   LocationPoint? current;
   int updates = 0;
+  bool isLive = false;
 
   @override
   void initState() {
     super.initState();
-    subscription = service.stream.listen((point) {
+    final stream = service.watchTripLocation(
+      widget.tripId,
+      onModeKnown: (live) {
+        if (!mounted) return;
+        setState(() => isLive = live);
+      },
+    );
+    subscription = stream.listen((point) {
       if (!mounted) return;
       setState(() {
         current = point;
         updates++;
       });
     });
-    service.start();
   }
 
   @override
   void dispose() {
     subscription?.cancel();
-    service.dispose();
     super.dispose();
   }
 
@@ -43,10 +51,15 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Seguimiento en vivo'),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Center(child: StatusBadge(label: 'EN CAMINO', color: AppTheme.success)),
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(
+              child: StatusBadge(
+                label: isLive ? 'EN VIVO' : 'DEMO',
+                color: isLive ? AppTheme.success : AppTheme.textMuted,
+              ),
+            ),
           ),
         ],
       ),
@@ -74,10 +87,12 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                             const SizedBox(height: 8),
                             Text('Actualizaciones: $updates', style: const TextStyle(color: AppTheme.textMuted)),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Aquí se sustituirá esta tarjeta por el mapa real.',
+                            Text(
+                              isLive
+                                  ? 'Ubicación real recibida por Supabase Realtime. Aquí se sustituirá esta tarjeta por el mapa.'
+                                  : 'Backend no configurado — mostrando una ruta simulada. Conecta SUPABASE_URL/SUPABASE_ANON_KEY para ver la ubicación real del conductor.',
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: AppTheme.textMuted, fontSize: 12),
+                              style: const TextStyle(color: AppTheme.textMuted, fontSize: 12),
                             ),
                           ],
                         ),
