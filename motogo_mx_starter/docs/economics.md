@@ -3,13 +3,13 @@
 ## Liquidación
 Para una tarifa final `F`:
 
-- comisión MotoGo MX = `F × 0.08`
-- neto conductor = `F × 0.92`
+- comisión MotoGo MX = `F × 0.10`
+- neto conductor = `F × 0.90`
 
 Ejemplo:
 - tarifa: 90 MXN
-- comisión 8%: 7.20 MXN
-- neto conductor: 82.80 MXN
+- comisión 10%: 9.00 MXN
+- neto conductor: 81.00 MXN
 
 ## Wallet
 El conductor tiene:

@@ -84,7 +84,7 @@ create table public.trips (
 
   quoted_fare numeric(12,2) not null check (quoted_fare >= 0),
   final_fare numeric(12,2),
-  platform_fee_rate numeric(5,4) not null default 0.0800,
+  platform_fee_rate numeric(5,4) not null default 0.1000,
   platform_fee numeric(12,2),
   driver_net numeric(12,2),
 

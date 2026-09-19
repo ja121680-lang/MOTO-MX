@@ -18,6 +18,7 @@ import 'screens/diamond_screen.dart';
 import 'screens/trip_history_screen.dart';
 import 'screens/rating_screen.dart';
 import 'screens/payment_screen.dart';
+import 'screens/corte_de_caja_screen.dart';
 
 Future<void> main() async {
   // Only connects when SUPABASE_URL/SUPABASE_ANON_KEY are passed via
@@ -58,6 +59,7 @@ class MotoGoApp extends StatelessWidget {
         '/history': (_) => const TripHistoryScreen(),
         '/rating': (_) => const RatingScreen(),
         '/payment': (_) => const PaymentScreen(),
+        '/corte-de-caja': (_) => const CorteDeCajaScreen(),
       },
     );
   }

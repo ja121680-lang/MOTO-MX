@@ -17,6 +17,10 @@ dependencies:
   # are provided via --dart-define — see lib/config/app_config.dart
   supabase_flutter: ^2.0.0
 
+  # Local trip ledger (corte de caja) — real local persistence until a
+  # backend is connected
+  shared_preferences: ^2.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

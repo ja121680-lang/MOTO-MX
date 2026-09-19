@@ -24,7 +24,7 @@ sequenceDiagram
     API-->>D: viaje iniciado
 
     D->>API: finalizar viaje
-    API->>API: calcular tarifa + comisión 8%
+    API->>API: calcular tarifa + comisión 10%
     API-->>P: viaje completado
     API-->>D: actualizar wallet
 ```
