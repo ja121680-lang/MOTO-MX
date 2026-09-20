@@ -24,6 +24,9 @@ dependencies:
   # Huella digital / Face ID para el bloqueo de acceso obligatorio
   local_auth: ^2.3.0
 
+  # Foto real de los documentos del conductor (antes era "carga simulada")
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

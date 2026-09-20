@@ -6,6 +6,7 @@ import 'screens/app_gate_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/lock_screen.dart';
 import 'screens/pin_setup_screen.dart';
+import 'screens/privacy_consent_screen.dart';
 import 'screens/request_ride_screen.dart';
 import 'screens/driver_screen.dart';
 import 'screens/admin_screen.dart';
@@ -47,6 +48,7 @@ class MotoGoApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (_) => const AppGateScreen(),
+        '/privacy-consent': (_) => const PrivacyConsentScreen(nextRoute: '/'),
         '/pin-setup': (_) => const PinSetupScreen(nextRoute: '/home'),
         '/lock': (_) => const LockScreen(nextRoute: '/home'),
         '/home': (_) => const HomeScreen(),
