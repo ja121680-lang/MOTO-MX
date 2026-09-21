@@ -17,26 +17,29 @@ class WalletScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpace.xl),
             decoration: BoxDecoration(
-              color: AppTheme.surface,
-              borderRadius: BorderRadius.circular(16),
+              color: AppTheme.surfaceElevated,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: AppTheme.primaryYellow.withOpacity(0.4)),
+              boxShadow: AppTheme.glow(AppTheme.primaryYellow, opacity: 0.12),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Saldo disponible', style: TextStyle(color: AppTheme.textMuted)),
-                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const GradientIconBadge(icon: Icons.account_balance_wallet, size: 40),
+                    const SizedBox(width: AppSpace.md),
+                    const Text('Saldo disponible', style: TextStyle(color: AppTheme.textMuted)),
+                  ],
+                ),
+                const SizedBox(height: AppSpace.md),
                 Text(
                   '\$${summary.available.toStringAsFixed(2)} MXN',
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryYellow,
-                  ),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryYellow),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSpace.sm),
                 Row(
                   children: [
                     const Icon(Icons.hourglass_top, size: 14, color: AppTheme.textMuted),
@@ -50,15 +53,15 @@ class WalletScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpace.lg),
           FilledButton.icon(
             onPressed: () => Navigator.pushNamed(context, '/withdrawal'),
             icon: const Icon(Icons.account_balance),
             label: const Text('Solicitar retiro'),
           ),
-          const SizedBox(height: 24),
-          const Text('Movimientos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpace.xxl),
+          Text('Movimientos', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: AppSpace.md),
           ...transactions.map((tx) {
             final isPositive = tx.amount >= 0;
             return Card(

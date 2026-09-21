@@ -25,22 +25,23 @@ class DiamondScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         children: [
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(AppSpace.xxl),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [_diamondBlue, Color(0xFF2E7D9E)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              boxShadow: AppTheme.glow(_diamondBlue, opacity: 0.25),
             ),
             child: Column(
               children: [
                 const Icon(Icons.workspace_premium, size: 56, color: Colors.white),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpace.md),
                 Text(
                   qualified ? '¡Eres Diamond!' : 'Camino a Diamond',
-                  style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 6),
                 Text(
@@ -48,14 +49,14 @@ class DiamondScreen extends StatelessWidget {
                       ? 'Disfruta beneficios exclusivos por tu excelente servicio.'
                       : 'Sigue así para desbloquear beneficios exclusivos.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                  style: const TextStyle(color: Colors.white70, fontSize: 13.5),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          const Text('Tu progreso', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpace.xxl),
+          Text('Tu progreso', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: AppSpace.md),
           _ProgressCriterion(
             icon: Icons.route,
             label: 'Viajes completados',
@@ -79,9 +80,9 @@ class DiamondScreen extends StatelessWidget {
             progress: (1 - cancellation / 0.08).clamp(0.0, 1.0),
             met: cancellation <= 0.08,
           ),
-          const SizedBox(height: 24),
-          const Text('Beneficios Diamond', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpace.xxl),
+          Text('Beneficios Diamond', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: AppSpace.md),
           const _BenefitTile(icon: Icons.bolt, label: 'Prioridad en asignación de viajes'),
           const _BenefitTile(icon: Icons.percent, label: 'Comisión preferencial'),
           const _BenefitTile(icon: Icons.support_agent, label: 'Soporte prioritario'),
@@ -109,10 +110,10 @@ class _ProgressCriterion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpace.lg),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(14),
+        color: AppTheme.surfaceElevated,
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: AppTheme.divider),
       ),
       child: Column(

@@ -20,12 +20,14 @@ class _DriverScreenState extends State<DriverScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.all(AppSpace.xl),
               decoration: BoxDecoration(
-                color: online ? AppTheme.success.withOpacity(0.12) : AppTheme.surface,
-                borderRadius: BorderRadius.circular(16),
+                color: online ? AppTheme.success.withOpacity(0.12) : AppTheme.surfaceElevated,
+                borderRadius: BorderRadius.circular(AppRadius.lg),
                 border: Border.all(color: online ? AppTheme.success : AppTheme.divider),
+                boxShadow: online ? AppTheme.glow(AppTheme.success, opacity: 0.15) : null,
               ),
               child: Row(
                 children: [
@@ -41,14 +43,14 @@ class _DriverScreenState extends State<DriverScreen> {
                       color: online ? Colors.black : AppTheme.textMuted,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpace.lg),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           online ? 'Disponible' : 'Fuera de línea',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const Text('Estado para recibir solicitudes', style: TextStyle(color: AppTheme.textMuted, fontSize: 12)),
                       ],
@@ -58,15 +60,15 @@ class _DriverScreenState extends State<DriverScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpace.xxl),
             FilledButton.icon(
               onPressed: () => Navigator.pushNamed(context, '/driver-registration'),
               icon: const Icon(Icons.app_registration),
               label: const Text('Completar registro de conductor'),
             ),
-            const SizedBox(height: 20),
-            const Text('Accesos rápidos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppTheme.textMuted)),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpace.xxl),
+            const SectionHeader('Accesos rápidos'),
+            const SizedBox(height: AppSpace.md),
             Card(
               child: ListTile(
                 leading: const Icon(Icons.account_balance_wallet),
