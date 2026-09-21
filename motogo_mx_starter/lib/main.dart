@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'config/app_config.dart';
+import 'services/text_scale_service.dart';
+import 'theme/app_theme.dart';
+import 'screens/app_gate_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/lock_screen.dart';
+import 'screens/pin_setup_screen.dart';
+import 'screens/privacy_consent_screen.dart';
 import 'screens/request_ride_screen.dart';
 import 'screens/driver_screen.dart';
 import 'screens/admin_screen.dart';
@@ -15,8 +23,18 @@ import 'screens/diamond_screen.dart';
 import 'screens/trip_history_screen.dart';
 import 'screens/rating_screen.dart';
 import 'screens/payment_screen.dart';
+import 'screens/corte_de_caja_screen.dart';
 
-void main() {
+Future<void> main() async {
+  // Only connects when SUPABASE_URL/SUPABASE_ANON_KEY are passed via
+  // --dart-define — see lib/config/app_config.dart. Without them the app
+  // stays fully usable in local/demo mode (DriverLocationService falls
+  // back to the simulated route instead of failing).
+  if (AppConfig.isConfigured) {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Supabase.initialize(url: AppConfig.supabaseUrl, publishableKey: AppConfig.supabaseAnonKey);
+  }
+  await TextScaleController.instance.load();
   runApp(const MotoGoApp());
 }
 
@@ -25,16 +43,25 @@ class MotoGoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MotoGo MX',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      initialRoute: '/',
+    return ListenableBuilder(
+      listenable: TextScaleController.instance,
+      builder: (context, _) => MaterialApp(
+        title: 'MotoGo MX',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(TextScaleController.instance.scale),
+          ),
+          child: child!,
+        ),
+        initialRoute: '/',
       routes: {
-        '/': (_) => const HomeScreen(),
+        '/': (_) => const AppGateScreen(),
+        '/privacy-consent': (_) => const PrivacyConsentScreen(nextRoute: '/'),
+        '/pin-setup': (_) => const PinSetupScreen(nextRoute: '/home'),
+        '/lock': (_) => const LockScreen(nextRoute: '/home'),
+        '/home': (_) => const HomeScreen(),
         '/request': (_) => const RequestRideScreen(),
         '/driver': (_) => const DriverScreen(),
         '/admin': (_) => const AdminScreen(),
@@ -50,7 +77,9 @@ class MotoGoApp extends StatelessWidget {
         '/history': (_) => const TripHistoryScreen(),
         '/rating': (_) => const RatingScreen(),
         '/payment': (_) => const PaymentScreen(),
-      },
+        '/corte-de-caja': (_) => const CorteDeCajaScreen(),
+        },
+      ),
     );
   }
 }

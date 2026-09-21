@@ -4,7 +4,7 @@
 - Cada usuario solo puede leer y modificar su propio perfil, salvo administrador.
 - Un pasajero solo puede ver un conductor cuando existe un viaje autorizado entre ambos.
 - Un conductor solo puede aceptar viajes si está aprobado y disponible.
-- La comisión del 8% se calcula en servidor/backend.
+- La comisión del 10% se calcula en servidor/backend.
 - Los retiros se validan en backend.
 - Los documentos privados no deben ser públicos.
 - El PIN de viaje no debe guardarse en texto plano.

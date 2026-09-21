@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class RatingScreen extends StatefulWidget {
   const RatingScreen({super.key});
@@ -22,15 +23,12 @@ class _RatingScreenState extends State<RatingScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Calificar viaje')),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpace.xl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              '¿Cómo estuvo el viaje?',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
+            Text('¿Cómo estuvo el viaje?', style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: AppSpace.lg),
             Wrap(
               alignment: WrapAlignment.center,
               children: List.generate(5, (index) {
@@ -39,19 +37,17 @@ class _RatingScreenState extends State<RatingScreen> {
                   onPressed: () => setState(() => score = value),
                   icon: Icon(
                     value <= score ? Icons.star : Icons.star_border,
+                    color: value <= score ? AppTheme.primaryYellow : AppTheme.textMuted,
                     size: 38,
                   ),
                 );
               }),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpace.lg),
             TextField(
               controller: comment,
               maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Comentario opcional',
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(labelText: 'Comentario opcional'),
             ),
             const Spacer(),
             FilledButton(

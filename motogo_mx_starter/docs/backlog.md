@@ -16,7 +16,7 @@
 - [x] PIN de inicio (starter)
 - [ ] Estado de viaje en tiempo real
 - [ ] Finalización
-- [ ] Comisión 8%
+- [ ] Comisión 10%
 - [x] Historial (starter)
 - [x] Calificaciones (starter)
 

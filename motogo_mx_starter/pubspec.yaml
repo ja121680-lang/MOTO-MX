@@ -9,6 +9,24 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Real device GPS (driver location capture)
+  geolocator: ^13.0.0
+
+  # Live location sharing (Supabase Realtime, see docs/realtime_flow.md);
+  # works fully offline in demo mode until SUPABASE_URL/SUPABASE_ANON_KEY
+  # are provided via --dart-define — see lib/config/app_config.dart
+  supabase_flutter: ^2.0.0
+
+  # Local trip ledger (corte de caja) — real local persistence until a
+  # backend is connected
+  shared_preferences: ^2.2.0
+
+  # Huella digital / Face ID para el bloqueo de acceso obligatorio
+  local_auth: ^2.3.0
+
+  # Foto real de los documentos del conductor (antes era "carga simulada")
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
