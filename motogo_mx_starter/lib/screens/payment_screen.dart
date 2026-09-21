@@ -43,7 +43,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Pago')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpace.xl),
         children: [
           Card(
             child: Column(
@@ -67,7 +67,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpace.lg),
           DropdownButtonFormField<MetodoPago>(
             value: method,
             items: MetodoPago.values
@@ -76,12 +76,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
             onChanged: isPaid ? null : (v) => setState(() => method = v ?? MetodoPago.efectivo),
             decoration: const InputDecoration(labelText: 'Método de pago'),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpace.xl),
           FilledButton(
             onPressed: isPaid ? null : _confirmarPago,
             child: const Text('Confirmar pago completado'),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpace.lg),
           Center(
             child: StatusBadge(
               label: status.toUpperCase(),

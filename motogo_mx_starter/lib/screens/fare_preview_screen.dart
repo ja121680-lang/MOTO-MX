@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/fare_service.dart';
+import '../theme/app_theme.dart';
 
 class FarePreviewScreen extends StatefulWidget {
   const FarePreviewScreen({super.key});
@@ -20,12 +21,12 @@ class _FarePreviewScreenState extends State<FarePreviewScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Cotización')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpace.xl),
         children: [
           Card(
             child: ListTile(
-              leading: const Icon(Icons.route),
-              title: Text('${quote.distanceKm.toStringAsFixed(1)} km'),
+              leading: const GradientIconBadge(icon: Icons.route, size: 44),
+              title: Text('${quote.distanceKm.toStringAsFixed(1)} km', style: const TextStyle(fontWeight: FontWeight.w600)),
               subtitle: Text('Tiempo estimado: ${quote.etaMinutes} min'),
             ),
           ),
@@ -58,8 +59,8 @@ class _FarePreviewScreenState extends State<FarePreviewScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          const Text('Simulación de distancia'),
+          const SizedBox(height: AppSpace.xl),
+          const SectionHeader('Simulación de distancia'),
           Slider(
             value: distance,
             min: 1,
@@ -68,7 +69,7 @@ class _FarePreviewScreenState extends State<FarePreviewScreen> {
             label: '${distance.toStringAsFixed(1)} km',
             onChanged: (v) => setState(() => distance = v),
           ),
-          const Text('Simulación de tiempo'),
+          const SectionHeader('Simulación de tiempo'),
           Slider(
             value: minutes.toDouble(),
             min: 3,
@@ -77,7 +78,7 @@ class _FarePreviewScreenState extends State<FarePreviewScreen> {
             label: '$minutes min',
             onChanged: (v) => setState(() => minutes = v.round()),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpace.lg),
           FilledButton(
             onPressed: () => Navigator.pushNamed(context, '/matching'),
             child: const Text('Solicitar este viaje'),

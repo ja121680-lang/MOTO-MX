@@ -32,9 +32,9 @@ class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            const SizedBox(height: 16),
-            const Text('Antes de continuar', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textLight)),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpace.lg),
+            Text('Antes de continuar', style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: AppSpace.lg),
             const Text(
               'MotoGo MX usa almacenamiento local en tu teléfono (similar a las cookies de un sitio web) y, cuando inicias sesión, también guarda tu información en nuestros servidores para que tus viajes y tu cuenta funcionen entre dispositivos.',
               style: TextStyle(fontSize: 14, color: AppTheme.textLight, height: 1.5),
@@ -81,8 +81,8 @@ class _ConsentOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: AppTheme.surfaceMuted, borderRadius: BorderRadius.circular(12)),
+      padding: const EdgeInsets.all(AppSpace.md),
+      decoration: BoxDecoration(color: AppTheme.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.md)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

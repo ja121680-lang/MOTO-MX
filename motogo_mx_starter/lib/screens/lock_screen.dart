@@ -97,11 +97,8 @@ class _LockScreenState extends State<LockScreen> {
                 ),
                 child: const Icon(Icons.lock_outline, color: Colors.black, size: 32),
               ),
-              const SizedBox(height: 24),
-              const Text(
-                'Ingresa tu PIN',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textLight),
-              ),
+              const SizedBox(height: AppSpace.xxl),
+              Text('Ingresa tu PIN', style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 8),
               const Text(
                 'Protegemos el acceso a tu cuenta.',

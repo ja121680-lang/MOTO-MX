@@ -57,7 +57,7 @@ class _CorteDeCajaScreenState extends State<CorteDeCajaScreen> {
   Widget _buildSummary(CorteDeCaja corte) {
     final feePct = (PricingConfig.platformFeeRate * 100).toStringAsFixed(0);
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpace.xl),
       children: [
         Card(
           child: Column(
@@ -85,13 +85,13 @@ class _CorteDeCajaScreenState extends State<CorteDeCajaScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        const Text('Por método de pago', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpace.xxl),
+        const SectionHeader('Por método de pago'),
+        const SizedBox(height: AppSpace.md),
         for (final metodo in MetodoPago.values)
           if ((corte.countByMetodo[metodo] ?? 0) > 0)
             Card(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: AppSpace.sm),
               child: ListTile(
                 title: Text(metodo.label),
                 subtitle: Text('${corte.countByMetodo[metodo]} viaje(s)'),

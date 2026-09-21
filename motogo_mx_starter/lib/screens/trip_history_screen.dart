@@ -30,9 +30,9 @@ class TripHistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Historial de viajes')),
       body: ListView.separated(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpace.lg),
         itemCount: trips.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, __) => const SizedBox(height: AppSpace.sm),
         itemBuilder: (_, index) {
           final trip = trips[index];
           final status = trip['status'] as String;
