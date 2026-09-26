@@ -51,11 +51,11 @@ class AppTheme {
   /// Soft glow used behind elevated hero surfaces (cards, primary CTA) so
   /// dark-mode UI still reads as "lifted" instead of flat borders only.
   static List<BoxShadow> glow(Color color, {double opacity = 0.18}) => [
-        BoxShadow(color: color.withOpacity(opacity), blurRadius: 24, offset: const Offset(0, 10)),
+        BoxShadow(color: color.withValues(alpha: opacity), blurRadius: 24, offset: const Offset(0, 10)),
       ];
 
   static List<BoxShadow> get cardShadow => [
-        BoxShadow(color: Colors.black.withOpacity(0.28), blurRadius: 16, offset: const Offset(0, 6)),
+        BoxShadow(color: Colors.black.withValues(alpha: 0.28), blurRadius: 16, offset: const Offset(0, 6)),
       ];
 
   static ThemeData get darkTheme {
@@ -81,7 +81,7 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceElevated,
         elevation: 0,
         margin: const EdgeInsets.only(bottom: AppSpace.md),
@@ -148,7 +148,7 @@ class AppTheme {
         ),
         trackColor: WidgetStateProperty.resolveWith(
           (states) => states.contains(WidgetState.selected)
-              ? primaryYellow.withOpacity(0.4)
+              ? primaryYellow.withValues(alpha: 0.4)
               : divider,
         ),
       ),
@@ -276,7 +276,7 @@ class StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
