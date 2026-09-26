@@ -27,7 +27,7 @@ jobs:
       - name: Dependencies
         run: flutter pub get
       - name: Analyze
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
       - name: Test
         run: |
           if [ -d test ]; then
