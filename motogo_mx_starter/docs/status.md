@@ -12,10 +12,10 @@
 - Botones SOS y compartir
 - Finalización de viaje
 - Registro de conductor por pasos
-- Biometría simulada
+- Verificación biométrica real del dispositivo mediante `local_auth` (huella/biometría del equipo; MotoGo MX no recibe la huella)
 - Datos de moto
 - Sindicato y número económico
-- Checklist/carga simulada de documentos
+- Captura real de fotos de documentos desde cámara/galería, guardadas localmente en el borrador de registro
 - Revisión administrativa por documento
 - Aprobación/rechazo de conductor
 - Base SQL con viajes, documentos, wallet, pagos, SOS y auditoría
@@ -38,20 +38,20 @@
 - Corte de caja real (lib/screens/corte_de_caja_screen.dart) — suma los viajes realmente completados y guardados localmente (TripLedgerService), no un número fijo de demo; desglosa comisión de la empresa, neto para conductores, y totales por método de pago
 - Comisión de plataforma 8% centralizada en `lib/config/pricing_config.dart`
 - Calificación de viaje
+- Pruebas automáticas de lógica y servicios principales en `test/`
 
 ## Aún requiere integración real
 - autenticación OTP
 - proyecto Supabase real conectado (URL/anon key) para que el seguimiento en vivo deje de caer en modo DEMO
-- carpetas android/ios generadas (`flutter create .`) + permisos nativos de ubicación (el starter solo tiene `lib/`, sin esas carpetas geolocator no puede pedir permiso en un dispositivo real todavía)
-- conectar DriverLocationService.publishDeviceLocation() al lado del conductor durante un viaje activo (el servicio ya existe, falta wirearlo en la pantalla del conductor)
+- carpetas android/ios y permisos nativos persistentes en el repositorio; CI genera Android temporalmente para validar el APK, pero la configuración nativa final debe quedar versionada antes del lanzamiento
+- conectar DriverLocationService.publishDeviceLocation() al lado del conductor durante un viaje activo (el servicio ya existe, falta wirearlo en la pantalla del viaje del conductor)
 - mapas visuales (el marcador en pantalla ya usa datos reales; falta el mapa de fondo)
 - rutas/distancia/ETA
 - notificaciones push
-- almacenamiento real de documentos
-- proveedor biométrico
+- almacenamiento remoto real de documentos
 - chat realtime
 - compartir viaje por enlace/contactos
-- pagos tarjeta/QR
+- pagos tarjeta/QR con proveedor real
 - RLS/políticas definitivas
 - panel admin con datos reales
-- pruebas automáticas
+- pruebas de integración/E2E contra backend y dispositivos reales
