@@ -59,7 +59,7 @@ class _RequestRideScreenState extends State<RequestRideScreen> {
           const SectionHeader('Método de pago'),
           const SizedBox(height: AppSpace.sm),
           DropdownButtonFormField<String>(
-            value: paymentMethod,
+            initialValue: paymentMethod,
             items: const [
               DropdownMenuItem(value: 'Efectivo', child: Text('Efectivo')),
               DropdownMenuItem(value: 'Tarjeta', child: Text('Tarjeta')),
@@ -73,7 +73,7 @@ class _RequestRideScreenState extends State<RequestRideScreen> {
             decoration: BoxDecoration(
               color: AppTheme.surfaceElevated,
               borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(color: AppTheme.primaryYellow.withOpacity(0.3)),
+              border: Border.all(color: AppTheme.primaryYellow.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
