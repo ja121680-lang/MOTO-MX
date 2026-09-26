@@ -44,7 +44,7 @@ class _RequestRideScreenState extends State<RequestRideScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: paymentMethod,
+              initialValue: paymentMethod,
               items: const [
                 DropdownMenuItem(value: 'Efectivo', child: Text('Efectivo')),
                 DropdownMenuItem(value: 'Tarjeta', child: Text('Tarjeta')),

@@ -24,25 +24,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
         children: [
           Card(
             child: Column(
-              children: const [
+              children: [
                 ListTile(
-                  title: Text('Total del viaje'),
-                  trailing: Text('\$90.00 MXN'),
+                  title: const Text('Total del viaje'),
+                  trailing: Text('\$${fare.toStringAsFixed(2)} MXN'),
                 ),
                 ListTile(
-                  title: Text('Comisión MotoGo MX (8%)'),
-                  trailing: Text('\$7.20'),
+                  title: const Text('Comisión MotoGo MX (8%)'),
+                  trailing: Text('\$${platformFee.toStringAsFixed(2)}'),
                 ),
                 ListTile(
-                  title: Text('Neto conductor'),
-                  trailing: Text('\$82.80'),
+                  title: const Text('Neto conductor'),
+                  trailing: Text('\$${driverNet.toStringAsFixed(2)}'),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: method,
+            initialValue: method,
             items: const [
               DropdownMenuItem(value: 'Efectivo', child: Text('Efectivo')),
               DropdownMenuItem(value: 'Tarjeta', child: Text('Tarjeta')),
