@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/local_auth.dart';
 
 import '../models/driver_registration.dart';
 import '../services/driver_registration_store.dart';
@@ -16,9 +17,11 @@ class DriverRegistrationScreen extends StatefulWidget {
 
 class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final _store = DriverRegistrationStore();
+  final _localAuth = LocalAuthentication();
   var data = DriverRegistrationData();
   int currentStep = 0;
   bool _loading = true;
+  bool _checkingBiometrics = false;
 
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -86,6 +89,50 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   Future<void> _saveDraft() async {
     syncData();
     await _store.save(data);
+  }
+
+  Future<void> _verifyBiometrics() async {
+    if (_checkingBiometrics) return;
+    setState(() => _checkingBiometrics = true);
+    try {
+      final supported = await _localAuth.isDeviceSupported();
+      final canCheck = await _localAuth.canCheckBiometrics;
+      if (!supported || !canCheck) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Este dispositivo no tiene biometría disponible o configurada.'),
+          ),
+        );
+        return;
+      }
+
+      final verified = await _localAuth.authenticate(
+        localizedReason: 'Verifica tu identidad para el registro de conductor MotoGo MX',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
+      );
+      if (!mounted) return;
+      if (verified) {
+        setState(() => data.biometricVerified = true);
+        await _saveDraft();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Biometría verificada en este dispositivo.')),
+        );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se pudo completar la verificación biométrica. Revisa la configuración del dispositivo.'),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _checkingBiometrics = false);
+    }
   }
 
   Future<void> _captureDocument(String name) async {
@@ -160,10 +207,12 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 ),
                 TextField(
                   controller: phoneController,
+                  keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(labelText: 'Teléfono'),
                 ),
                 TextField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(labelText: 'Correo opcional'),
                 ),
               ],
@@ -171,13 +220,37 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           ),
           Step(
             title: const Text('Biometría'),
-            content: SwitchListTile(
-              value: data.biometricVerified,
-              onChanged: (v) => setState(() => data.biometricVerified = v),
-              title: const Text('Biometría verificada'),
-              subtitle: const Text(
-                'Simulación por ahora; después se conecta proveedor real.',
-              ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(
+                    data.biometricVerified ? Icons.verified_user : Icons.fingerprint,
+                    color: data.biometricVerified ? Colors.green : null,
+                  ),
+                  title: Text(
+                    data.biometricVerified ? 'Biometría verificada' : 'Verificación pendiente',
+                  ),
+                  subtitle: const Text(
+                    'La verificación usa la huella o biometría configurada en tu propio dispositivo. MotoGo MX no recibe tu huella digital.',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                FilledButton.icon(
+                  onPressed: data.biometricVerified || _checkingBiometrics ? null : _verifyBiometrics,
+                  icon: _checkingBiometrics
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.fingerprint),
+                  label: Text(
+                    data.biometricVerified ? 'Identidad verificada' : 'Verificar huella / biometría',
+                  ),
+                ),
+              ],
             ),
           ),
           Step(
