@@ -1,5 +1,5 @@
 name: motogo_mx
-description: Starter app for MotoGo MX
+description: GA MotoGo MX — movilidad premium y accesible
 publish_to: "none"
 
 environment:
@@ -8,6 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -15,3 +18,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/ga_motogo_hero.svg
