@@ -6,6 +6,9 @@ on:
       - ga/motogo-final-ga-20260927
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   flutter:
     runs-on: ubuntu-latest
@@ -16,6 +19,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ga/motogo-final-ga-20260927
+          fetch-depth: 0
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
@@ -28,8 +34,8 @@ jobs:
           cache: true
       - name: Dependencies
         run: flutter pub get
-      - name: Format check
-        run: dart format --output=none --set-exit-if-changed lib
+      - name: Format Dart source
+        run: dart format lib
       - name: Analyze
         run: flutter analyze
       - name: Test
@@ -52,3 +58,15 @@ jobs:
           name: ga-motogo-final-apk
           path: motogo_mx_starter/build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+      - name: Persist formatting after successful QA
+        working-directory: .
+        run: |
+          if [ -z "$(git status --porcelain -- motogo_mx_starter/lib motogo_mx_starter/pubspec.lock)" ]; then
+            echo "No formatting or lockfile changes to persist."
+            exit 0
+          fi
+          git config user.name "GA MotoGo QA Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add motogo_mx_starter/lib motogo_mx_starter/pubspec.lock
+          git commit -m "build: persist MotoGo formatting and dependency lock"
+          git push origin HEAD:ga/motogo-final-ga-20260927
