@@ -27,6 +27,10 @@ dependencies:
   # Foto real de los documentos del conductor (antes era "carga simulada")
   image_picker: ^1.1.2
 
+  # GA accessible conversational assistant: short voice requests + spoken replies.
+  speech_to_text: ^7.5.0
+  flutter_tts: ^4.2.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
