@@ -37,16 +37,26 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
     super.dispose();
   }
 
-  Future<bool> _confirm({required String title, required String body, required String confirmLabel, bool danger = false}) async {
+  Future<bool> _confirm(
+      {required String title,
+      required String body,
+      required String confirmLabel,
+      bool danger = false}) async {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text(title),
             content: Text(body),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
+              TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancelar')),
               FilledButton(
-                style: danger ? FilledButton.styleFrom(backgroundColor: GAColors.danger, foregroundColor: GAColors.black) : null,
+                style: danger
+                    ? FilledButton.styleFrom(
+                        backgroundColor: GAColors.danger,
+                        foregroundColor: GAColors.black)
+                    : null,
                 onPressed: () => Navigator.pop(context, true),
                 child: Text(confirmLabel),
               ),
@@ -59,25 +69,31 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
   Future<void> _sos() async {
     final ok = await _confirm(
       title: 'Confirmar SOS',
-      body: 'Esta función puede compartir información sensible o iniciar una acción de emergencia cuando la integración esté activa. ¿Quieres continuar?',
+      body:
+          'Esta función puede compartir información sensible o iniciar una acción de emergencia cuando la integración esté activa. ¿Quieres continuar?',
       confirmLabel: 'Confirmar SOS',
       danger: true,
     );
     if (!ok || !mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('SOS confirmado. La integración externa de emergencia aún está pendiente.')),
+      const SnackBar(
+          content: Text(
+              'SOS confirmado. La integración externa de emergencia aún está pendiente.')),
     );
   }
 
   Future<void> _share() async {
     final ok = await _confirm(
       title: 'Compartir viaje',
-      body: 'Compartir un viaje puede revelar ubicación. Revisa quién recibirá el enlace antes de enviarlo. ¿Quieres preparar la acción?',
+      body:
+          'Compartir un viaje puede revelar ubicación. Revisa quién recibirá el enlace antes de enviarlo. ¿Quieres preparar la acción?',
       confirmLabel: 'Continuar',
     );
     if (!ok || !mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Confirmado. El proveedor de compartición todavía no está integrado.')),
+      const SnackBar(
+          content: Text(
+              'Confirmado. El proveedor de compartición todavía no está integrado.')),
     );
   }
 
@@ -108,7 +124,8 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                   ),
                   Center(
                     child: p == null
-                        ? const CircularProgressIndicator(color: GAColors.goldLight)
+                        ? const CircularProgressIndicator(
+                            color: GAColors.goldLight)
                         : Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -118,19 +135,31 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: const Color(0xFF211A08),
-                                  border: Border.all(color: GAColors.gold, width: 2),
+                                  border: Border.all(
+                                      color: GAColors.gold, width: 2),
                                 ),
-                                child: const Icon(Icons.two_wheeler_rounded, size: 46, color: GAColors.goldLight),
+                                child: const Icon(Icons.two_wheeler_rounded,
+                                    size: 46, color: GAColors.goldLight),
                               ),
                               const SizedBox(height: 14),
-                              const Text('UBICACIÓN SIMULADA', style: TextStyle(color: GAColors.goldLight, fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 1.1)),
+                              const Text('UBICACIÓN SIMULADA',
+                                  style: TextStyle(
+                                      color: GAColors.goldLight,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 1.1)),
                               const SizedBox(height: 7),
                               Text(
                                 '${p.lat.toStringAsFixed(5)}, ${p.lng.toStringAsFixed(5)}',
-                                style: const TextStyle(color: GAColors.white, fontSize: 18, fontWeight: FontWeight.w900),
+                                style: const TextStyle(
+                                    color: GAColors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900),
                               ),
                               const SizedBox(height: 5),
-                              Text('Actualizaciones: $updates', style: const TextStyle(color: GAColors.muted, fontSize: 14)),
+                              Text('Actualizaciones: $updates',
+                                  style: const TextStyle(
+                                      color: GAColors.muted, fontSize: 14)),
                             ],
                           ),
                   ),
@@ -140,7 +169,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
             const SizedBox(height: 14),
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: GAColors.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: GAColors.line)),
+              decoration: BoxDecoration(
+                  color: GAColors.surface,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: GAColors.line)),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -150,9 +182,18 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Mapa real pendiente de integración', style: TextStyle(color: GAColors.white, fontSize: 17, fontWeight: FontWeight.w900)),
+                        Text('Mapa real pendiente de integración',
+                            style: TextStyle(
+                                color: GAColors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w900)),
                         SizedBox(height: 4),
-                        Text('Esta vista usa coordenadas simuladas y no debe presentarse como seguimiento GPS real.', style: TextStyle(color: GAColors.muted, fontSize: 14, height: 1.4)),
+                        Text(
+                            'Esta vista usa coordenadas simuladas y no debe presentarse como seguimiento GPS real.',
+                            style: TextStyle(
+                                color: GAColors.muted,
+                                fontSize: 14,
+                                height: 1.4)),
                       ],
                     ),
                   ),
@@ -161,7 +202,9 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
-              style: FilledButton.styleFrom(backgroundColor: GAColors.danger, foregroundColor: GAColors.black),
+              style: FilledButton.styleFrom(
+                  backgroundColor: GAColors.danger,
+                  foregroundColor: GAColors.black),
               onPressed: _sos,
               icon: const Icon(Icons.sos_rounded),
               label: const Text('SOS — NECESITO AYUDA'),
@@ -198,7 +241,8 @@ class _RouteGridPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     final path = Path()
       ..moveTo(size.width * .08, size.height * .77)
-      ..cubicTo(size.width * .28, size.height * .46, size.width * .55, size.height * .86, size.width * .86, size.height * .25);
+      ..cubicTo(size.width * .28, size.height * .46, size.width * .55,
+          size.height * .86, size.width * .86, size.height * .25);
     canvas.drawPath(path, route);
   }
 

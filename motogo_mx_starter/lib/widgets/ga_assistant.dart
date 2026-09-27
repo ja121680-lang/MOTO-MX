@@ -23,7 +23,8 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
   final _tts = FlutterTts();
   bool _open = false;
   bool _listening = false;
-  String _reply = 'Hola. Dime qué necesitas: pedir un viaje, revisar tu wallet, ver viajes, encontrar conductores o entrar al modo conductor.';
+  String _reply =
+      'Hola. Dime qué necesitas: pedir un viaje, revisar tu wallet, ver viajes, encontrar conductores o entrar al modo conductor.';
 
   @override
   void initState() {
@@ -62,7 +63,8 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
   void _go(String route, String message) {
     final nav = widget.navigatorKey.currentState;
     if (nav == null) {
-      _say('No pude abrir esa sección todavía. Intenta de nuevo en un momento.');
+      _say(
+          'No pude abrir esa sección todavía. Intenta de nuevo en un momento.');
       return;
     }
     nav.pushNamed(route);
@@ -73,55 +75,85 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
     final t = _normalize(raw);
     if (t.isEmpty) return;
 
-    if (RegExp(r'^(hola|buenos dias|buenas tardes|buenas noches|hello|ola)').hasMatch(t)) {
-      await _say('Hola. ¿En qué te puedo ayudar? Puedes hablarme con tus propias palabras.');
+    if (RegExp(r'^(hola|buenos dias|buenas tardes|buenas noches|hello|ola)')
+        .hasMatch(t)) {
+      await _say(
+          'Hola. ¿En qué te puedo ayudar? Puedes hablarme con tus propias palabras.');
       return;
     }
-    if (t.contains('pedir') || t.contains('solicitar') || t.contains('quiero viajar') || t.contains('a donde voy')) {
-      _go('/request', 'Claro. Te llevo a solicitar un viaje. Revisa origen, destino y tarifa antes de confirmar.');
+    if (t.contains('pedir') ||
+        t.contains('solicitar') ||
+        t.contains('quiero viajar') ||
+        t.contains('a donde voy')) {
+      _go('/request',
+          'Claro. Te llevo a solicitar un viaje. Revisa origen, destino y tarifa antes de confirmar.');
       return;
     }
-    if (t.contains('conductores cerca') || t.contains('motos cerca') || t.contains('conductor cercano')) {
+    if (t.contains('conductores cerca') ||
+        t.contains('motos cerca') ||
+        t.contains('conductor cercano')) {
       _go('/nearby-drivers', 'Abriendo conductores cercanos.');
       return;
     }
-    if (t.contains('wallet') || t.contains('saldo') || t.contains('dinero') || t.contains('billetera')) {
+    if (t.contains('wallet') ||
+        t.contains('saldo') ||
+        t.contains('dinero') ||
+        t.contains('billetera')) {
       _go('/wallet', 'Abriendo tu wallet.');
       return;
     }
     if (t.contains('retiro') || t.contains('retirar')) {
-      _go('/wallet', 'Te llevo a tu wallet. Retirar dinero es una acción sensible: revisa el monto y confirma tú mismo antes de continuar.');
+      _go('/wallet',
+          'Te llevo a tu wallet. Retirar dinero es una acción sensible: revisa el monto y confirma tú mismo antes de continuar.');
       return;
     }
-    if (t.contains('historial') || t.contains('viajes anteriores') || t.contains('mis viajes')) {
+    if (t.contains('historial') ||
+        t.contains('viajes anteriores') ||
+        t.contains('mis viajes')) {
       _go('/history', 'Abriendo tu historial de viajes.');
       return;
     }
-    if (t.contains('conductor') || t.contains('manejar') || t.contains('trabajar')) {
-      _go('/driver', 'Abriendo el modo conductor. Revisa tu estado antes de conectarte.');
+    if (t.contains('conductor') ||
+        t.contains('manejar') ||
+        t.contains('trabajar')) {
+      _go('/driver',
+          'Abriendo el modo conductor. Revisa tu estado antes de conectarte.');
       return;
     }
-    if (t.contains('diamante') || t.contains('recompensa') || t.contains('puntos')) {
+    if (t.contains('diamante') ||
+        t.contains('recompensa') ||
+        t.contains('puntos')) {
       _go('/diamond', 'Abriendo tus recompensas y diamantes.');
       return;
     }
     if (t.contains('pago') || t.contains('pagar')) {
-      _go('/payment', 'Abriendo métodos de pago. Revisa el método y el importe antes de confirmar.');
+      _go('/payment',
+          'Abriendo métodos de pago. Revisa el método y el importe antes de confirmar.');
       return;
     }
-    if (t.contains('seguimiento') || t.contains('donde viene') || t.contains('tracking')) {
+    if (t.contains('seguimiento') ||
+        t.contains('donde viene') ||
+        t.contains('tracking')) {
       _go('/tracking', 'Abriendo el seguimiento del viaje.');
       return;
     }
-    if (t.contains('ayuda') || t.contains('no encuentro') || t.contains('que puedo hacer')) {
-      await _say('Puedo llevarte a solicitar un viaje, conductores cercanos, wallet, historial, modo conductor, recompensas, pagos o seguimiento. Dime qué necesitas.');
+    if (t.contains('ayuda') ||
+        t.contains('no encuentro') ||
+        t.contains('que puedo hacer')) {
+      await _say(
+          'Puedo llevarte a solicitar un viaje, conductores cercanos, wallet, historial, modo conductor, recompensas, pagos o seguimiento. Dime qué necesitas.');
       return;
     }
-    if (t.contains('cancelar') || t.contains('eliminar') || t.contains('borrar') || t.contains('transferir')) {
-      await _say('Esa puede ser una acción sensible. Puedo llevarte a la sección correcta, pero la confirmación final debe hacerla tú en pantalla.');
+    if (t.contains('cancelar') ||
+        t.contains('eliminar') ||
+        t.contains('borrar') ||
+        t.contains('transferir')) {
+      await _say(
+          'Esa puede ser una acción sensible. Puedo llevarte a la sección correcta, pero la confirmación final debe hacerla tú en pantalla.');
       return;
     }
-    await _say('No quiero adivinar una acción importante. Prueba diciendo: quiero pedir una moto, abre mi wallet, enséñame mis viajes o quiero modo conductor.');
+    await _say(
+        'No quiero adivinar una acción importante. Prueba diciendo: quiero pedir una moto, abre mi wallet, enséñame mis viajes o quiero modo conductor.');
   }
 
   Future<void> _toggleListening() async {
@@ -140,19 +172,21 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
         if (mounted) {
           setState(() {
             _listening = false;
-            _reply = 'No pude activar la voz. Revisa el permiso del micrófono o escribe tu mensaje.';
+            _reply =
+                'No pude activar la voz. Revisa el permiso del micrófono o escribe tu mensaje.';
           });
         }
       },
     );
     if (!available) {
-      await _say('La voz no está disponible en este dispositivo. Puedes escribir tu mensaje.');
+      await _say(
+          'La voz no está disponible en este dispositivo. Puedes escribir tu mensaje.');
       return;
     }
     if (mounted) setState(() => _listening = true);
     await _speech.listen(
-      localeId: 'es_MX',
       listenOptions: stt.SpeechListenOptions(
+        localeId: 'es_MX',
         listenMode: stt.ListenMode.confirmation,
         cancelOnError: true,
         partialResults: false,
@@ -191,7 +225,12 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
                       ),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(color: GAColors.gold),
-                      boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 28, offset: Offset(0, 16))],
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 28,
+                            offset: Offset(0, 16))
+                      ],
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -205,25 +244,37 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: const Color(0xFF211A08),
-                                border: Border.all(color: GAColors.goldLight, width: 2),
+                                border: Border.all(
+                                    color: GAColors.goldLight, width: 2),
                               ),
                               alignment: Alignment.center,
-                              child: const Text('GA', style: TextStyle(color: GAColors.goldLight, fontSize: 17, fontWeight: FontWeight.w900)),
+                              child: const Text('GA',
+                                  style: TextStyle(
+                                      color: GAColors.goldLight,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900)),
                             ),
                             const SizedBox(width: 12),
                             const Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Asistente MotoGo', style: TextStyle(color: GAColors.white, fontSize: 19, fontWeight: FontWeight.w900)),
-                                  Text('Habla o escribe con naturalidad', style: TextStyle(color: GAColors.muted, fontSize: 14)),
+                                  Text('Asistente MotoGo',
+                                      style: TextStyle(
+                                          color: GAColors.white,
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.w900)),
+                                  Text('Habla o escribe con naturalidad',
+                                      style: TextStyle(
+                                          color: GAColors.muted, fontSize: 14)),
                                 ],
                               ),
                             ),
                             IconButton(
                               tooltip: 'Cerrar asistente',
                               onPressed: () => setState(() => _open = false),
-                              icon: const Icon(Icons.close, color: GAColors.white),
+                              icon: const Icon(Icons.close,
+                                  color: GAColors.white),
                             ),
                           ],
                         ),
@@ -237,7 +288,11 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(color: GAColors.line),
                             ),
-                            child: Text(_reply, style: const TextStyle(color: GAColors.white, fontSize: 16, height: 1.45)),
+                            child: Text(_reply,
+                                style: const TextStyle(
+                                    color: GAColors.white,
+                                    fontSize: 16,
+                                    height: 1.45)),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -247,26 +302,40 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
                               child: TextField(
                                 controller: _controller,
                                 textInputAction: TextInputAction.send,
-                                onSubmitted: (v) { _handle(v); _controller.clear(); },
-                                decoration: const InputDecoration(hintText: 'Ej. Quiero pedir una moto'),
+                                onSubmitted: (v) {
+                                  _handle(v);
+                                  _controller.clear();
+                                },
+                                decoration: const InputDecoration(
+                                    hintText: 'Ej. Quiero pedir una moto'),
                               ),
                             ),
                             const SizedBox(width: 8),
                             IconButton.filledTonal(
-                              tooltip: _listening ? 'Dejar de escuchar' : 'Hablar',
+                              tooltip:
+                                  _listening ? 'Dejar de escuchar' : 'Hablar',
                               onPressed: _toggleListening,
                               style: IconButton.styleFrom(
                                 minimumSize: const Size(54, 54),
-                                backgroundColor: _listening ? GAColors.goldLight : const Color(0xFF211A08),
-                                foregroundColor: _listening ? GAColors.black : GAColors.goldLight,
+                                backgroundColor: _listening
+                                    ? GAColors.goldLight
+                                    : const Color(0xFF211A08),
+                                foregroundColor: _listening
+                                    ? GAColors.black
+                                    : GAColors.goldLight,
                               ),
-                              icon: Icon(_listening ? Icons.mic : Icons.mic_none, size: 27),
+                              icon: Icon(
+                                  _listening ? Icons.mic : Icons.mic_none,
+                                  size: 27),
                             ),
                           ],
                         ),
                         const SizedBox(height: 8),
                         FilledButton(
-                          onPressed: () { _handle(_controller.text); _controller.clear(); },
+                          onPressed: () {
+                            _handle(_controller.text);
+                            _controller.clear();
+                          },
                           child: const Text('Enviar'),
                         ),
                         const SizedBox(height: 8),
@@ -297,7 +366,9 @@ class _GAAssistantOverlayState extends State<GAAssistantOverlay> {
                   borderRadius: BorderRadius.circular(18),
                   side: const BorderSide(color: GAColors.gold, width: 2),
                 ),
-                child: Text(_open ? '×' : 'GA', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+                child: Text(_open ? '×' : 'GA',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w900)),
               ),
             ),
           ),

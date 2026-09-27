@@ -33,13 +33,28 @@ class GATheme {
       colorScheme: scheme,
       fontFamily: 'Roboto',
       textTheme: const TextTheme(
-        displayLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.w900, color: GAColors.white, height: 1.05),
-        headlineLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: GAColors.white, height: 1.1),
-        headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: GAColors.white, height: 1.15),
-        titleLarge: TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: GAColors.white),
-        titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: GAColors.white),
+        displayLarge: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.w900,
+            color: GAColors.white,
+            height: 1.05),
+        headlineLarge: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w900,
+            color: GAColors.white,
+            height: 1.1),
+        headlineMedium: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w800,
+            color: GAColors.white,
+            height: 1.15),
+        titleLarge: TextStyle(
+            fontSize: 21, fontWeight: FontWeight.w800, color: GAColors.white),
+        titleMedium: TextStyle(
+            fontSize: 18, fontWeight: FontWeight.w700, color: GAColors.white),
         bodyLarge: TextStyle(fontSize: 17, color: GAColors.white, height: 1.45),
-        bodyMedium: TextStyle(fontSize: 16, color: GAColors.muted, height: 1.45),
+        bodyMedium:
+            TextStyle(fontSize: 16, color: GAColors.muted, height: 1.45),
         labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
       ),
       appBarTheme: const AppBarTheme(
@@ -48,7 +63,8 @@ class GATheme {
         centerTitle: false,
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w900, color: GAColors.white),
+        titleTextStyle: TextStyle(
+            fontSize: 21, fontWeight: FontWeight.w900, color: GAColors.white),
         iconTheme: IconThemeData(color: GAColors.goldLight, size: 28),
       ),
       cardTheme: CardThemeData(
@@ -66,7 +82,8 @@ class GATheme {
           foregroundColor: GAColors.black,
           minimumSize: const Size.fromHeight(54),
           textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -75,7 +92,8 @@ class GATheme {
           minimumSize: const Size.fromHeight(52),
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           side: const BorderSide(color: GAColors.gold, width: 1.4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -83,21 +101,31 @@ class GATheme {
         fillColor: GAColors.surface2,
         hintStyle: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 16),
         labelStyle: const TextStyle(color: GAColors.muted, fontSize: 16),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: GAColors.line)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: GAColors.line)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: GAColors.goldLight, width: 2)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: GAColors.line)),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: GAColors.line)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: GAColors.goldLight, width: 2)),
       ),
       navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: GAColors.surface,
         indicatorColor: Color(0x332D2410),
         height: 76,
-        labelTextStyle: WidgetStatePropertyAll(TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+        labelTextStyle: WidgetStatePropertyAll(
+            TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
         iconTheme: WidgetStatePropertyAll(IconThemeData(size: 27)),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: GAColors.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: const BorderSide(color: GAColors.goldDark)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: const BorderSide(color: GAColors.goldDark)),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: GAColors.surface2,

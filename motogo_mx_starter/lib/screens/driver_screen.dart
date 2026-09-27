@@ -25,16 +25,22 @@ class _DriverScreenState extends State<DriverScreen> {
           children: [
             Icon(icon, color: GAColors.goldLight, size: 24),
             const SizedBox(height: 10),
-            Text(value, style: const TextStyle(color: GAColors.white, fontSize: 22, fontWeight: FontWeight.w900)),
+            Text(value,
+                style: const TextStyle(
+                    color: GAColors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900)),
             const SizedBox(height: 3),
-            Text(label, style: const TextStyle(color: GAColors.muted, fontSize: 13)),
+            Text(label,
+                style: const TextStyle(color: GAColors.muted, fontSize: 13)),
           ],
         ),
       ),
     );
   }
 
-  Widget _action(BuildContext context, IconData icon, String title, String subtitle, String route) {
+  Widget _action(BuildContext context, IconData icon, String title,
+      String subtitle, String route) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
@@ -50,9 +56,12 @@ class _DriverScreenState extends State<DriverScreen> {
           alignment: Alignment.center,
           child: Icon(icon, color: GAColors.goldLight, size: 25),
         ),
-        title: Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 14, color: GAColors.muted)),
-        trailing: const Icon(Icons.chevron_right_rounded, color: GAColors.goldLight, size: 28),
+        title: Text(title,
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
+        subtitle: Text(subtitle,
+            style: const TextStyle(fontSize: 14, color: GAColors.muted)),
+        trailing: const Icon(Icons.chevron_right_rounded,
+            color: GAColors.goldLight, size: 28),
         onTap: () => Navigator.pushNamed(context, route),
       ),
     );
@@ -75,7 +84,9 @@ class _DriverScreenState extends State<DriverScreen> {
                       : const [Color(0xFF17130A), Color(0xFF0A0A0A)],
                 ),
                 borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: online ? GAColors.success : GAColors.goldDark, width: 1.5),
+                border: Border.all(
+                    color: online ? GAColors.success : GAColors.goldDark,
+                    width: 1.5),
               ),
               child: Row(
                 children: [
@@ -84,24 +95,45 @@ class _DriverScreenState extends State<DriverScreen> {
                     height: 58,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: online ? const Color(0xFF173F28) : const Color(0xFF211A08),
+                      color: online
+                          ? const Color(0xFF173F28)
+                          : const Color(0xFF211A08),
                     ),
-                    child: Icon(online ? Icons.online_prediction_rounded : Icons.power_settings_new_rounded, color: online ? GAColors.success : GAColors.goldLight, size: 32),
+                    child: Icon(
+                        online
+                            ? Icons.online_prediction_rounded
+                            : Icons.power_settings_new_rounded,
+                        color: online ? GAColors.success : GAColors.goldLight,
+                        size: 32),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(online ? 'CONECTADO' : 'DESCONECTADO', style: TextStyle(color: online ? GAColors.success : GAColors.goldLight, fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 1.2)),
+                        Text(online ? 'CONECTADO' : 'DESCONECTADO',
+                            style: TextStyle(
+                                color: online
+                                    ? GAColors.success
+                                    : GAColors.goldLight,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.2)),
                         const SizedBox(height: 5),
-                        Text(online ? 'Disponible para solicitudes' : 'No recibirás solicitudes', style: const TextStyle(color: GAColors.white, fontSize: 19, fontWeight: FontWeight.w900)),
+                        Text(
+                            online
+                                ? 'Disponible para solicitudes'
+                                : 'No recibirás solicitudes',
+                            style: const TextStyle(
+                                color: GAColors.white,
+                                fontSize: 19,
+                                fontWeight: FontWeight.w900)),
                       ],
                     ),
                   ),
                   Switch(
                     value: online,
-                    activeColor: GAColors.success,
+                    activeThumbColor: GAColors.success,
                     onChanged: (v) => setState(() => online = v),
                   ),
                 ],
@@ -125,25 +157,36 @@ class _DriverScreenState extends State<DriverScreen> {
                 decoration: BoxDecoration(
                   color: const Color(0xFF101A14),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: GAColors.success.withOpacity(.5)),
+                  border:
+                      Border.all(color: GAColors.success.withValues(alpha: .5)),
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.radar_rounded, color: GAColors.success, size: 30),
+                    Icon(Icons.radar_rounded,
+                        color: GAColors.success, size: 30),
                     SizedBox(width: 12),
-                    Expanded(child: Text('Buscando solicitudes cercanas…', style: TextStyle(color: GAColors.white, fontSize: 16, fontWeight: FontWeight.w800))),
+                    Expanded(
+                        child: Text('Buscando solicitudes cercanas…',
+                            style: TextStyle(
+                                color: GAColors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800))),
                   ],
                 ),
               ),
             FilledButton.icon(
-              onPressed: () => Navigator.pushNamed(context, '/driver-registration'),
+              onPressed: () =>
+                  Navigator.pushNamed(context, '/driver-registration'),
               icon: const Icon(Icons.badge_outlined),
               label: const Text('REGISTRO DE CONDUCTOR'),
             ),
             const SizedBox(height: 18),
-            _action(context, Icons.account_balance_wallet_rounded, 'Wallet', 'Saldo, comisiones y retiros', '/wallet'),
-            _action(context, Icons.diamond_rounded, 'Diamantes', 'Progreso, nivel y beneficios', '/diamond'),
-            _action(context, Icons.history_rounded, 'Historial', 'Viajes y movimientos', '/history'),
+            _action(context, Icons.account_balance_wallet_rounded, 'Wallet',
+                'Saldo, comisiones y retiros', '/wallet'),
+            _action(context, Icons.diamond_rounded, 'Diamantes',
+                'Progreso, nivel y beneficios', '/diamond'),
+            _action(context, Icons.history_rounded, 'Historial',
+                'Viajes y movimientos', '/history'),
           ],
         ),
       ),

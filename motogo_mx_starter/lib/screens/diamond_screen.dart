@@ -43,8 +43,7 @@ class DiamondScreen extends StatelessWidget {
                 ),
                 ListTile(
                   title: const Text('Cancelaciones'),
-                  trailing:
-                      Text('${(cancellation * 100).toStringAsFixed(1)}%'),
+                  trailing: Text('${(cancellation * 100).toStringAsFixed(1)}%'),
                 ),
               ],
             ),

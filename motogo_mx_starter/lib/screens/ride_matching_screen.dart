@@ -184,7 +184,8 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
           CircleAvatar(
             radius: 28,
             backgroundColor: Color(0xFF211A08),
-            child: Icon(Icons.person_rounded, color: GAColors.goldLight, size: 31),
+            child:
+                Icon(Icons.person_rounded, color: GAColors.goldLight, size: 31),
           ),
           SizedBox(width: 13),
           Expanded(

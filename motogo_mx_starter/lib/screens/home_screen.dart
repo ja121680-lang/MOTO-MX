@@ -42,9 +42,15 @@ class HomeScreen extends StatelessWidget {
                   child: Icon(icon, color: GAColors.goldLight, size: 27),
                 ),
                 const SizedBox(height: 12),
-                Text(title, style: const TextStyle(color: GAColors.white, fontSize: 17, fontWeight: FontWeight.w900)),
+                Text(title,
+                    style: const TextStyle(
+                        color: GAColors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900)),
                 const SizedBox(height: 3),
-                Text(subtitle, style: const TextStyle(color: GAColors.muted, fontSize: 14, height: 1.3)),
+                Text(subtitle,
+                    style: const TextStyle(
+                        color: GAColors.muted, fontSize: 14, height: 1.3)),
               ],
             ),
           ),
@@ -59,7 +65,9 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Row(
           children: [
-            Text('GA', style: TextStyle(color: GAColors.goldLight, fontWeight: FontWeight.w900)),
+            Text('GA',
+                style: TextStyle(
+                    color: GAColors.goldLight, fontWeight: FontWeight.w900)),
             SizedBox(width: 8),
             Text('MotoGo MX'),
           ],
@@ -94,11 +102,17 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 22),
-              const Text('¿A dónde vas?', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: GAColors.white, height: 1.05)),
+              const Text('¿A dónde vas?',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: GAColors.white,
+                      height: 1.05)),
               const SizedBox(height: 8),
               const Text(
                 'Define tu origen y destino. Verás la tarifa antes de confirmar el viaje.',
-                style: TextStyle(fontSize: 16, color: GAColors.muted, height: 1.45),
+                style: TextStyle(
+                    fontSize: 16, color: GAColors.muted, height: 1.45),
               ),
               const SizedBox(height: 18),
               FilledButton.icon(
@@ -150,7 +164,8 @@ class HomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF17130A), Color(0xFF0B0B0B)]),
+                  gradient: const LinearGradient(
+                      colors: [Color(0xFF17130A), Color(0xFF0B0B0B)]),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: GAColors.goldDark),
                 ),
@@ -159,13 +174,22 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.verified_user_outlined, color: GAColors.goldLight, size: 28),
+                        Icon(Icons.verified_user_outlined,
+                            color: GAColors.goldLight, size: 28),
                         SizedBox(width: 10),
-                        Expanded(child: Text('¿Eres conductor?', style: TextStyle(color: GAColors.white, fontSize: 20, fontWeight: FontWeight.w900))),
+                        Expanded(
+                            child: Text('¿Eres conductor?',
+                                style: TextStyle(
+                                    color: GAColors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900))),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text('Conéctate, revisa solicitudes y administra tus ganancias desde el modo conductor.', style: TextStyle(color: GAColors.muted, fontSize: 15, height: 1.4)),
+                    const Text(
+                        'Conéctate, revisa solicitudes y administra tus ganancias desde el modo conductor.',
+                        style: TextStyle(
+                            color: GAColors.muted, fontSize: 15, height: 1.4)),
                     const SizedBox(height: 14),
                     OutlinedButton.icon(
                       onPressed: () => Navigator.pushNamed(context, '/driver'),
@@ -178,8 +202,13 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 14),
               TextButton.icon(
                 onPressed: () => Navigator.pushNamed(context, '/admin'),
-                icon: const Icon(Icons.admin_panel_settings_outlined, color: GAColors.muted),
-                label: const Text('Panel administrador', style: TextStyle(color: GAColors.muted, fontSize: 15, fontWeight: FontWeight.w700)),
+                icon: const Icon(Icons.admin_panel_settings_outlined,
+                    color: GAColors.muted),
+                label: const Text('Panel administrador',
+                    style: TextStyle(
+                        color: GAColors.muted,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700)),
               ),
             ],
           ),

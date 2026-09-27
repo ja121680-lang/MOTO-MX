@@ -38,7 +38,8 @@ class TripHistoryScreen extends StatelessWidget {
             child: ListTile(
               title: Text('${trip['id']} · ${trip['status']}'),
               subtitle: Text('${trip['route']}'),
-              trailing: Text('\$${(trip['fare'] as double).toStringAsFixed(2)}'),
+              trailing:
+                  Text('\$${(trip['fare'] as double).toStringAsFixed(2)}'),
             ),
           );
         },

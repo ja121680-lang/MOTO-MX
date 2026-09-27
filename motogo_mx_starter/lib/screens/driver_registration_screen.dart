@@ -88,7 +88,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Nombre completo'),
+                  decoration:
+                      const InputDecoration(labelText: 'Nombre completo'),
                 ),
                 TextField(
                   controller: phoneController,
@@ -96,7 +97,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 ),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(labelText: 'Correo opcional'),
+                  decoration:
+                      const InputDecoration(labelText: 'Correo opcional'),
                 ),
               ],
             ),

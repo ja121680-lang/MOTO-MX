@@ -20,8 +20,6 @@ class DiamondService {
     required double rating,
     required double cancellationRate,
   }) {
-    return completedTrips >= 100 &&
-        rating >= 4.8 &&
-        cancellationRate <= 0.08;
+    return completedTrips >= 100 && rating >= 4.8 && cancellationRate <= 0.08;
   }
 }

@@ -67,9 +67,8 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
           }),
           const SizedBox(height: 12),
           FilledButton.icon(
-            onPressed: allApproved
-                ? () => setState(() => status = 'Aprobado')
-                : null,
+            onPressed:
+                allApproved ? () => setState(() => status = 'Aprobado') : null,
             icon: const Icon(Icons.verified),
             label: const Text('Aprobar conductor'),
           ),
