@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 /// GA conversational assistant for MotoGo MX.
 ///
@@ -21,9 +25,83 @@ class MotoGoGAAssistant extends StatefulWidget {
 
 class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
   final _controller = TextEditingController();
+  final _speech = stt.SpeechToText();
+  final _tts = FlutterTts();
+
   String _answer = '¿En qué te ayudo?';
   String? _pendingRoute;
   String? _pendingLabel;
+  bool _speechReady = false;
+  bool _listening = false;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_initVoice());
+  }
+
+  Future<void> _initVoice() async {
+    try {
+      final available = await _speech.initialize(
+        onStatus: (status) {
+          if (!mounted) return;
+          final active = status == 'listening';
+          if (_listening != active) setState(() => _listening = active);
+        },
+        onError: (_) {
+          if (!mounted) return;
+          setState(() => _listening = false);
+        },
+      );
+      await _tts.setLanguage('es-MX');
+      await _tts.setSpeechRate(0.48);
+      await _tts.setVolume(1.0);
+      await _tts.setPitch(1.0);
+      if (mounted) setState(() => _speechReady = available);
+    } catch (_) {
+      if (mounted) setState(() => _speechReady = false);
+    }
+  }
+
+  Future<void> _speak(String message) async {
+    try {
+      await _tts.stop();
+      await _tts.speak(message);
+    } catch (_) {
+      // Text remains visible and screen-reader friendly if TTS is unavailable.
+    }
+  }
+
+  Future<void> _toggleListening() async {
+    if (_speech.isListening) {
+      await _speech.stop();
+      if (mounted) setState(() => _listening = false);
+      return;
+    }
+
+    if (!_speechReady) {
+      await _initVoice();
+      if (!_speechReady) {
+        _say('No pude activar el reconocimiento de voz en este dispositivo. Puedes seguir escribiendo tu solicitud.');
+        return;
+      }
+    }
+
+    await _tts.stop();
+    await _speech.listen(
+      localeId: 'es_MX',
+      onResult: (result) {
+        final words = result.recognizedWords.trim();
+        if (!mounted || words.isEmpty) return;
+        setState(() => _controller.text = words);
+        if (result.finalResult) {
+          setState(() => _listening = false);
+          _handle(words);
+        }
+      },
+    );
+    if (mounted) setState(() => _listening = true);
+  }
 
   String _norm(String value) {
     var text = value.toLowerCase().trim();
@@ -47,6 +125,7 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
   void _say(String message) {
     if (!mounted) return;
     setState(() => _answer = message);
+    unawaited(_speak(message));
   }
 
   void _navigate(String route, String message) {
@@ -59,9 +138,10 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
       _pendingRoute = route;
       _pendingLabel = label;
       _answer = 'Esta solicitud abre un flujo sensible: $label. '
-          'Escribe “confirmar” para abrirlo o “cancelar” para detenerlo. '
+          'Di o escribe “confirmar” para abrirlo, o “cancelar” para detenerlo. '
           'El asistente no ejecutará la acción final por ti.';
     });
+    unawaited(_speak(_answer));
   }
 
   void _confirm() {
@@ -83,14 +163,14 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
     setState(() {
       _pendingRoute = null;
       _pendingLabel = null;
-      _answer = 'Acción cancelada. No se solicitó viaje, no se pagó, no se retiró dinero y no se modificaron datos.';
     });
+    _say('Acción cancelada. No se solicitó viaje, no se pagó, no se retiró dinero y no se modificaron datos.');
   }
 
   void _handle(String raw) {
     final text = _norm(raw);
     if (text.isEmpty) {
-      _say('Escribe con tus propias palabras lo que necesitas. Por ejemplo: “quiero pedir una moto”, “abre mi historial” o “quiero ver mi saldo”.');
+      _say('Puedes decirme, por ejemplo: “quiero pedir una moto”, “abre mi historial” o “quiero ver mi saldo”.');
       return;
     }
 
@@ -100,7 +180,7 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
       return;
     }
     if (_pendingRoute != null &&
-        _has(text, ['cancelar', 'cancela', 'detener', 'no continuar'])) {
+        _has(text, ['cancelar', 'cancela', 'detener', 'no continuar', 'no'])) {
       _cancel();
       return;
     }
@@ -185,6 +265,8 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
 
   @override
   void dispose() {
+    unawaited(_speech.cancel());
+    unawaited(_tts.stop());
     _controller.dispose();
     super.dispose();
   }
@@ -222,7 +304,7 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
                 ],
               ),
               const Text(
-                'Escribe con lenguaje natural. El asistente orienta y navega; nunca completa pagos, retiros, viajes o aprobaciones por sí mismo.',
+                'Habla o escribe con lenguaje natural. El asistente orienta y navega; nunca completa pagos, retiros, viajes o aprobaciones por sí mismo.',
                 style: TextStyle(color: Color(0xFFD7D7D7), fontSize: 15, height: 1.45),
               ),
               const SizedBox(height: 14),
@@ -257,16 +339,24 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
                 ),
               ),
               const SizedBox(height: 12),
-              FilledButton.icon(
-                onPressed: () => _handle(_controller.text),
-                icon: const Icon(Icons.send),
-                label: const Text('Enviar'),
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton.icon(
-                onPressed: () => _say('La navegación conversacional está activa. La voz nativa se añadirá únicamente después de validar que el APK actual sigue estable; no voy a comprometer el build Android por agregar un plugin sin verificar.'),
-                icon: const Icon(Icons.mic_none),
-                label: const Text('Estado de voz'),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _toggleListening,
+                      icon: Icon(_listening ? Icons.mic : Icons.mic_none),
+                      label: Text(_listening ? 'Escuchando…' : 'Hablar'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () => _handle(_controller.text),
+                      icon: const Icon(Icons.send),
+                      label: const Text('Enviar'),
+                    ),
+                  ),
+                ],
               ),
               TextButton(
                 onPressed: () => _handle('que puedes hacer'),
@@ -275,39 +365,6 @@ class _MotoGoGAAssistantState extends State<MotoGoGAAssistant> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class MotoGoGAAssistantLauncher extends StatelessWidget {
-  const MotoGoGAAssistantLauncher({
-    super.key,
-    required this.onNavigate,
-  });
-
-  final void Function(String route) onNavigate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Abrir asistente conversacional GA',
-      child: FloatingActionButton.small(
-        heroTag: 'motogo-ga-assistant',
-        tooltip: 'Asistente GA',
-        backgroundColor: const Color(0xFFD4AF37),
-        foregroundColor: const Color(0xFF0B0B0B),
-        onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            isScrollControlled: true,
-            useSafeArea: true,
-            backgroundColor: Colors.transparent,
-            builder: (_) => MotoGoGAAssistant(onNavigate: onNavigate),
-          );
-        },
-        child: const Icon(Icons.chat_bubble_outline),
       ),
     );
   }
