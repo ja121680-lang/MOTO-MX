@@ -22,6 +22,9 @@ jobs:
         with:
           ref: ga/motogo-final-ga-20260927
           fetch-depth: 0
+      - name: Apply GA analyzer cleanup
+        working-directory: .
+        run: python3 scripts/ga_motogo_cleanup.py
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
@@ -58,15 +61,15 @@ jobs:
           name: ga-motogo-final-apk
           path: motogo_mx_starter/build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
-      - name: Persist formatting after successful QA
+      - name: Persist cleanup and formatting after successful QA
         working-directory: .
         run: |
           if [ -z "$(git status --porcelain -- motogo_mx_starter/lib motogo_mx_starter/pubspec.lock)" ]; then
-            echo "No formatting or lockfile changes to persist."
+            echo "No source or lockfile changes to persist."
             exit 0
           fi
           git config user.name "GA MotoGo QA Bot"
           git config user.email "actions@users.noreply.github.com"
           git add motogo_mx_starter/lib motogo_mx_starter/pubspec.lock
-          git commit -m "build: persist MotoGo formatting and dependency lock"
+          git commit -m "build: persist MotoGo analyzer cleanup and formatting"
           git push origin HEAD:ga/motogo-final-ga-20260927
