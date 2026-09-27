@@ -24,15 +24,22 @@ import 'screens/trip_history_screen.dart';
 import 'screens/rating_screen.dart';
 import 'screens/payment_screen.dart';
 import 'screens/corte_de_caja_screen.dart';
+import 'widgets/ga_assistant.dart';
+
+final GlobalKey<NavigatorState> motoGoNavigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Only connects when SUPABASE_URL/SUPABASE_ANON_KEY are passed via
   // --dart-define — see lib/config/app_config.dart. Without them the app
   // stays fully usable in local/demo mode (DriverLocationService falls
   // back to the simulated route instead of failing).
   if (AppConfig.isConfigured) {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Supabase.initialize(url: AppConfig.supabaseUrl, publishableKey: AppConfig.supabaseAnonKey);
+    await Supabase.initialize(
+      url: AppConfig.supabaseUrl,
+      publishableKey: AppConfig.supabaseAnonKey,
+    );
   }
   await TextScaleController.instance.load();
   runApp(const MotoGoApp());
@@ -41,11 +48,30 @@ Future<void> main() async {
 class MotoGoApp extends StatelessWidget {
   const MotoGoApp({super.key});
 
+  void _navigateFromAssistant(String route) {
+    final navigator = motoGoNavigatorKey.currentState;
+    if (navigator == null) return;
+    navigator.pushNamed(route);
+  }
+
+  void _openAssistant() {
+    final overlayContext = motoGoNavigatorKey.currentState?.overlay?.context;
+    if (overlayContext == null) return;
+    showModalBottomSheet<void>(
+      context: overlayContext,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => MotoGoGAAssistant(onNavigate: _navigateFromAssistant),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: TextScaleController.instance,
       builder: (context, _) => MaterialApp(
+        navigatorKey: motoGoNavigatorKey,
         title: 'MotoGo MX',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
@@ -53,31 +79,53 @@ class MotoGoApp extends StatelessWidget {
           data: MediaQuery.of(context).copyWith(
             textScaler: TextScaler.linear(TextScaleController.instance.scale),
           ),
-          child: child!,
+          child: Stack(
+            children: [
+              child ?? const SizedBox.shrink(),
+              Positioned(
+                right: 16,
+                bottom: 84,
+                child: SafeArea(
+                  child: Semantics(
+                    button: true,
+                    label: 'Abrir asistente conversacional GA',
+                    child: FloatingActionButton.small(
+                      heroTag: 'motogo-ga-assistant-global',
+                      tooltip: 'Asistente GA',
+                      onPressed: _openAssistant,
+                      backgroundColor: const Color(0xFFD4AF37),
+                      foregroundColor: const Color(0xFF0B0B0B),
+                      child: const Icon(Icons.chat_bubble_outline),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         initialRoute: '/',
-      routes: {
-        '/': (_) => const AppGateScreen(),
-        '/privacy-consent': (_) => const PrivacyConsentScreen(nextRoute: '/'),
-        '/pin-setup': (_) => const PinSetupScreen(nextRoute: '/home'),
-        '/lock': (_) => const LockScreen(nextRoute: '/home'),
-        '/home': (_) => const HomeScreen(),
-        '/request': (_) => const RequestRideScreen(),
-        '/driver': (_) => const DriverScreen(),
-        '/admin': (_) => const AdminScreen(),
-        '/driver-registration': (_) => const DriverRegistrationScreen(),
-        '/driver-approval': (_) => const DriverApprovalScreen(),
-        '/matching': (_) => const RideMatchingScreen(),
-        '/tracking': (_) => const LiveTrackingScreen(),
-        '/fare-preview': (_) => const FarePreviewScreen(),
-        '/nearby-drivers': (_) => const NearbyDriversScreen(),
-        '/wallet': (_) => const WalletScreen(),
-        '/withdrawal': (_) => const WithdrawalScreen(),
-        '/diamond': (_) => const DiamondScreen(),
-        '/history': (_) => const TripHistoryScreen(),
-        '/rating': (_) => const RatingScreen(),
-        '/payment': (_) => const PaymentScreen(),
-        '/corte-de-caja': (_) => const CorteDeCajaScreen(),
+        routes: {
+          '/': (_) => const AppGateScreen(),
+          '/privacy-consent': (_) => const PrivacyConsentScreen(nextRoute: '/'),
+          '/pin-setup': (_) => const PinSetupScreen(nextRoute: '/home'),
+          '/lock': (_) => const LockScreen(nextRoute: '/home'),
+          '/home': (_) => const HomeScreen(),
+          '/request': (_) => const RequestRideScreen(),
+          '/driver': (_) => const DriverScreen(),
+          '/admin': (_) => const AdminScreen(),
+          '/driver-registration': (_) => const DriverRegistrationScreen(),
+          '/driver-approval': (_) => const DriverApprovalScreen(),
+          '/matching': (_) => const RideMatchingScreen(),
+          '/tracking': (_) => const LiveTrackingScreen(),
+          '/fare-preview': (_) => const FarePreviewScreen(),
+          '/nearby-drivers': (_) => const NearbyDriversScreen(),
+          '/wallet': (_) => const WalletScreen(),
+          '/withdrawal': (_) => const WithdrawalScreen(),
+          '/diamond': (_) => const DiamondScreen(),
+          '/history': (_) => const TripHistoryScreen(),
+          '/rating': (_) => const RatingScreen(),
+          '/payment': (_) => const PaymentScreen(),
+          '/corte-de-caja': (_) => const CorteDeCajaScreen(),
         },
       ),
     );
