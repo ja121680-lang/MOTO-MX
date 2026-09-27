@@ -91,7 +91,6 @@ class MotoGoApp extends StatelessWidget {
                     label: 'Abrir asistente conversacional GA',
                     child: FloatingActionButton.small(
                       heroTag: 'motogo-ga-assistant-global',
-                      tooltip: 'Asistente GA',
                       onPressed: _openAssistant,
                       backgroundColor: const Color(0xFFD4AF37),
                       foregroundColor: const Color(0xFF0B0B0B),
