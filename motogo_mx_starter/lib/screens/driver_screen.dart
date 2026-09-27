@@ -80,7 +80,7 @@ class _DriverScreenState extends State<DriverScreen> {
             ),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.workspace_premium, color: Color(0xFF60D6F0)),
+                leading: const Icon(Icons.workspace_premium, color: AppTheme.primaryYellow),
                 title: const Text('Nivel Diamond'),
                 subtitle: const Text('Beneficios y requisitos'),
                 trailing: const Icon(Icons.chevron_right, color: AppTheme.textMuted),
