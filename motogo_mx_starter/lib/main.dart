@@ -15,22 +15,33 @@ import 'screens/diamond_screen.dart';
 import 'screens/trip_history_screen.dart';
 import 'screens/rating_screen.dart';
 import 'screens/payment_screen.dart';
+import 'theme/ga_theme.dart';
+import 'widgets/ga_assistant.dart';
 
 void main() {
   runApp(const MotoGoApp());
 }
 
-class MotoGoApp extends StatelessWidget {
+class MotoGoApp extends StatefulWidget {
   const MotoGoApp({super.key});
+
+  @override
+  State<MotoGoApp> createState() => _MotoGoAppState();
+}
+
+class _MotoGoAppState extends State<MotoGoApp> {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MotoGo MX',
+      navigatorKey: _navigatorKey,
+      title: 'GA MotoGo MX',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
+      theme: GATheme.dark(),
+      builder: (context, child) => GAAssistantOverlay(
+        navigatorKey: _navigatorKey,
+        child: child ?? const SizedBox.shrink(),
       ),
       initialRoute: '/',
       routes: {
