@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/text_scale_service.dart';
 
-/// GA APP STANDARD 2026 — spacing scale shared across every screen so
-/// paddings/gaps stop being ad-hoc magic numbers.
+/// GA APP STANDARD 2026 — shared spacing scale.
 class AppSpace {
   static const double xs = 4;
   static const double sm = 8;
@@ -14,8 +13,7 @@ class AppSpace {
   static const double xxxl = 32;
 }
 
-/// GA APP STANDARD 2026 — corner-radius scale. Small controls get [sm],
-/// cards/inputs get [md], hero/primary surfaces get [lg].
+/// GA APP STANDARD 2026 — shared corner-radius scale.
 class AppRadius {
   static const double sm = 10;
   static const double md = 16;
@@ -23,39 +21,44 @@ class AppRadius {
   static const double pill = 999;
 }
 
-/// Single source of truth for MotoGo MX's design system — dark, energetic,
-/// built for legibility outdoors (drivers checking the screen mid-ride).
+/// GA APP STANDARD 2026.
+/// Black + GA gold + white. Semantic status colors stay independent so
+/// safety/success/error states remain immediately recognizable.
 class AppTheme {
-  static const Color primaryYellow = Color(0xFFFFC800);
-  static const Color primaryYellowDeep = Color(0xFFE6A800);
+  static const Color primaryYellow = Color(0xFFD4AF37); // GA gold
+  static const Color primaryYellowDeep = Color(0xFFB8860B);
   static const Color accentRed = Color(0xFFEF4444);
-  static const Color background = Color(0xFF0D0F13);
-  static const Color surface = Color(0xFF1A1D24);
-  static const Color surfaceElevated = Color(0xFF21242C);
-  static const Color surfaceMuted = Color(0xFF23262E);
-  static const Color textLight = Color(0xFFF5F5F7);
-  static const Color textMuted = Color(0xFF9AA0AC);
+  static const Color background = Color(0xFF0B0B0B);
+  static const Color surface = Color(0xFF111111);
+  static const Color surfaceElevated = Color(0xFF171717);
+  static const Color surfaceMuted = Color(0xFF1F1F1F);
+  static const Color textLight = Color(0xFFF8F8F8);
+  static const Color textMuted = Color(0xFFB8B8B8);
   static const Color success = Color(0xFF22C55E);
   static const Color error = Color(0xFFEF4444);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color divider = Color(0xFF2E323C);
+  static const Color warning = Color(0xFFF2C94C);
+  static const Color divider = Color(0xFF343434);
 
-  /// Warm gradient for the app's primary calls-to-action — replaces flat
-  /// yellow fills on the highest-priority buttons/hero cards.
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [primaryYellow, primaryYellowDeep],
   );
 
-  /// Soft glow used behind elevated hero surfaces (cards, primary CTA) so
-  /// dark-mode UI still reads as "lifted" instead of flat borders only.
-  static List<BoxShadow> glow(Color color, {double opacity = 0.18}) => [
-        BoxShadow(color: color.withValues(alpha: opacity), blurRadius: 24, offset: const Offset(0, 10)),
+  static List<BoxShadow> glow(Color color, {double opacity = 0.20}) => [
+        BoxShadow(
+          color: color.withValues(alpha: opacity),
+          blurRadius: 24,
+          offset: const Offset(0, 10),
+        ),
       ];
 
   static List<BoxShadow> get cardShadow => [
-        BoxShadow(color: Colors.black.withValues(alpha: 0.28), blurRadius: 16, offset: const Offset(0, 6)),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.36),
+          blurRadius: 18,
+          offset: const Offset(0, 8),
+        ),
       ];
 
   static ThemeData get darkTheme {
@@ -63,26 +66,38 @@ class AppTheme {
       seedColor: primaryYellow,
       brightness: Brightness.dark,
       surface: surface,
-    ).copyWith(primary: primaryYellow, error: error);
+    ).copyWith(
+      primary: primaryYellow,
+      onPrimary: Colors.black,
+      secondary: primaryYellowDeep,
+      onSecondary: Colors.black,
+      surface: surface,
+      onSurface: textLight,
+      error: error,
+    );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
+      canvasColor: background,
+      dividerColor: divider,
       appBarTheme: const AppBarTheme(
         backgroundColor: background,
         foregroundColor: textLight,
         elevation: 0,
         centerTitle: false,
+        surfaceTintColor: Colors.transparent,
         titleTextStyle: TextStyle(
           color: textLight,
           fontSize: 19,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w800,
         ),
       ),
       cardTheme: CardThemeData(
         color: surfaceElevated,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: const EdgeInsets.only(bottom: AppSpace.md),
         shape: RoundedRectangleBorder(
@@ -97,16 +112,33 @@ class AppTheme {
           disabledBackgroundColor: divider,
           disabledForegroundColor: textMuted,
           minimumSize: const Size.fromHeight(56),
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryYellow,
+          foregroundColor: Colors.black,
+          disabledBackgroundColor: divider,
+          disabledForegroundColor: textMuted,
+          minimumSize: const Size.fromHeight(56),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: textLight,
           minimumSize: const Size.fromHeight(56),
-          side: const BorderSide(color: divider),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+          side: const BorderSide(color: primaryYellow),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -126,7 +158,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: const BorderSide(color: primaryYellow, width: 1.5),
+          borderSide: const BorderSide(color: primaryYellow, width: 1.7),
         ),
         labelStyle: const TextStyle(color: textMuted),
         hintStyle: const TextStyle(color: textMuted),
@@ -144,11 +176,11 @@ class AppTheme {
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected) ? primaryYellow : textMuted,
+          (states) => states.contains(WidgetState.selected) ? Colors.black : textMuted,
         ),
         trackColor: WidgetStateProperty.resolveWith(
           (states) => states.contains(WidgetState.selected)
-              ? primaryYellow.withValues(alpha: 0.4)
+              ? primaryYellow
               : divider,
         ),
       ),
@@ -157,6 +189,31 @@ class AppTheme {
         contentTextStyle: const TextStyle(color: textLight),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: surfaceElevated,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          side: const BorderSide(color: divider),
+        ),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: surface,
+        selectedItemColor: primaryYellow,
+        unselectedItemColor: textMuted,
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: true,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: surface,
+        indicatorColor: primaryYellow.withValues(alpha: .18),
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => TextStyle(
+            color: states.contains(WidgetState.selected) ? primaryYellow : textMuted,
+            fontWeight: states.contains(WidgetState.selected) ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
       ),
       textTheme: const TextTheme(
         displaySmall: TextStyle(fontSize: 30, fontWeight: FontWeight.w800, color: textLight, letterSpacing: -0.5),
@@ -167,15 +224,12 @@ class AppTheme {
         bodyLarge: TextStyle(fontSize: 17, color: textLight),
         bodyMedium: TextStyle(fontSize: 15.5, color: textLight),
         bodySmall: TextStyle(fontSize: 13.5, color: textMuted),
-        labelLarge: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textLight),
+        labelLarge: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: textLight),
       ),
     );
   }
 }
 
-/// Circular icon badge with the primary gradient — the consistent way to
-/// present a leading icon on hero cards, KPI tiles and list rows across the
-/// GA APP STANDARD 2026 system.
 class GradientIconBadge extends StatelessWidget {
   const GradientIconBadge({
     super.key,
@@ -195,15 +249,16 @@ class GradientIconBadge extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(gradient: gradient, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        gradient: gradient,
+        shape: BoxShape.circle,
+        boxShadow: AppTheme.glow(AppTheme.primaryYellow),
+      ),
       child: Icon(icon, color: iconColor, size: size * 0.46),
     );
   }
 }
 
-/// Round "Aa" button that lets the user cycle the app's text size
-/// (Normal → Grande → Muy grande, persisted). Belongs next to any screen's
-/// primary app-bar actions so the control is always reachable.
 class TextScaleToggleButton extends StatelessWidget {
   const TextScaleToggleButton({super.key});
 
@@ -225,7 +280,11 @@ class TextScaleToggleButton extends StatelessWidget {
                 message: 'Tamaño de letra: $label. Toca para cambiar.',
                 child: const Text(
                   'Aa',
-                  style: TextStyle(fontWeight: FontWeight.w800, color: AppTheme.textLight, fontSize: 15),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: AppTheme.textLight,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
@@ -236,8 +295,6 @@ class TextScaleToggleButton extends StatelessWidget {
   }
 }
 
-/// Uppercase, letter-spaced eyebrow label used to introduce a section —
-/// replaces bare bold `Text` so every screen groups content the same way.
 class SectionHeader extends StatelessWidget {
   const SectionHeader(this.text, {super.key, this.trailing});
 
@@ -264,7 +321,6 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-/// Small rounded status pill used across matching/tracking/wallet screens.
 class StatusBadge extends StatelessWidget {
   const StatusBadge({super.key, required this.label, required this.color});
 
