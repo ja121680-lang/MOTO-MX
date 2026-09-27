@@ -1,0 +1,54 @@
+name: GA MotoGo Final QA
+
+on:
+  push:
+    branches:
+      - ga/motogo-final-ga-20260927
+  workflow_dispatch:
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: motogo_mx_starter
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Dependencies
+        run: flutter pub get
+      - name: Format check
+        run: dart format --output=none --set-exit-if-changed lib
+      - name: Analyze
+        run: flutter analyze
+      - name: Test
+        run: |
+          if [ -d test ]; then
+            flutter test
+          else
+            echo "No test directory yet; skipping Flutter tests."
+          fi
+      - name: Ensure Android platform scaffold
+        run: |
+          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
+            flutter create . --platforms=android --project-name=motogo_mx --org=com.gaeasy
+          fi
+      - name: Build Android release APK
+        run: flutter build apk --release
+      - name: Upload Android release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga-motogo-final-apk
+          path: motogo_mx_starter/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
