@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../data/demo_driver_fixture.dart';
 import '../l10n/app_strings.dart';
+import '../models/sos_event.dart';
+import '../services/sos_event_service.dart';
 import '../theme/app_theme.dart';
 import 'live_tracking_screen.dart';
 
@@ -21,9 +23,13 @@ class RideMatchingScreen extends StatefulWidget {
   State<RideMatchingScreen> createState() => _RideMatchingScreenState();
 }
 
+const _maxPinAttempts = 3;
+
 class _RideMatchingScreenState extends State<RideMatchingScreen> {
   MatchingState state = MatchingState.searching;
   final pinController = TextEditingController();
+  int pinAttemptsLeft = _maxPinAttempts;
+  String? pinError;
 
   @override
   void dispose() {
@@ -78,6 +84,13 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
         case MatchingState.pin:
           if (pinController.text == '1234') {
             state = MatchingState.inProgress;
+            pinError = null;
+          } else if (pinAttemptsLeft > 0) {
+            pinAttemptsLeft--;
+            pinError = pinAttemptsLeft > 0
+                ? S.t('PIN incorrecto. Te quedan $pinAttemptsLeft intento(s).')
+                : S.t('Se agotaron los intentos. Confirma el PIN con tu conductor y cancela si no coincide.');
+            pinController.clear();
           }
           break;
         case MatchingState.inProgress:
@@ -155,7 +168,9 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
         ],
       ),
     );
-    if (confirmed == true && mounted) {
+    if (confirmed == true) {
+      await SosEventService().log(role: SosRole.passenger);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: AppTheme.error,
@@ -292,17 +307,28 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
                 controller: pinController,
                 keyboardType: TextInputType.number,
                 obscureText: true,
+                enabled: pinAttemptsLeft > 0,
                 decoration: InputDecoration(
                   labelText: S.t('PIN de viaje'),
                   hintText: S.t('Demo: 1234'),
+                  errorText: pinError,
                 ),
               ),
+              if (pinAttemptsLeft <= 0) ...[
+                const SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: _cancel,
+                  child: Text(S.t('Cancelar viaje')),
+                ),
+              ],
             ],
             const SizedBox(height: 12),
             FilledButton(
-              onPressed: state == MatchingState.completed
-                  ? () => Navigator.pushNamed(context, '/payment')
-                  : next,
+              onPressed: state == MatchingState.pin && pinAttemptsLeft <= 0
+                  ? null
+                  : state == MatchingState.completed
+                      ? () => Navigator.pushNamed(context, '/payment')
+                      : next,
               child: Text(
                 switch (state) {
                   MatchingState.searching => S.t('Simular conductor disponible'),

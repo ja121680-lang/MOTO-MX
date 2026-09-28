@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import '../data/demo_driver_fixture.dart';
 import '../l10n/app_strings.dart';
 import '../models/location_point.dart';
+import '../models/sos_event.dart';
 import '../services/driver_location_service.dart';
+import '../services/sos_event_service.dart';
 import '../theme/app_theme.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
@@ -66,7 +68,9 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
         ],
       ),
     );
-    if (confirmed == true && mounted) {
+    if (confirmed == true) {
+      await SosEventService().log(role: SosRole.passenger, tripId: widget.tripId);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: AppTheme.error,

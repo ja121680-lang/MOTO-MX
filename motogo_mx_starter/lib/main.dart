@@ -25,6 +25,8 @@ import 'screens/trip_history_screen.dart';
 import 'screens/rating_screen.dart';
 import 'screens/payment_screen.dart';
 import 'screens/corte_de_caja_screen.dart';
+import 'screens/fare_config_screen.dart';
+import 'screens/sos_alerts_screen.dart';
 
 Future<void> main() async {
   // Only connects when SUPABASE_URL/SUPABASE_ANON_KEY are passed via
@@ -71,7 +73,9 @@ class MotoGoApp extends StatelessWidget {
         '/driver-approval': (_) => const DriverApprovalScreen(),
         '/matching': (_) => const RideMatchingScreen(),
         '/tracking': (_) => const LiveTrackingScreen(),
-        '/fare-preview': (_) => const FarePreviewScreen(),
+        '/fare-preview': (_) => FarePreviewScreen(),
+        '/fare-config': (_) => const FareConfigScreen(),
+        '/sos-alerts': (_) => const SosAlertsScreen(),
         '/nearby-drivers': (_) => const NearbyDriversScreen(),
         '/wallet': (_) => const WalletScreen(),
         '/withdrawal': (_) => const WithdrawalScreen(),

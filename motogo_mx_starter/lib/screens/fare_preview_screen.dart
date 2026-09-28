@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
+import '../services/fare_config_store.dart';
 import '../services/fare_service.dart';
 import '../theme/app_theme.dart';
 import 'ride_matching_screen.dart';
@@ -10,7 +11,7 @@ import 'ride_matching_screen.dart';
 /// that split is internal to the driver/admin side, not a passenger
 /// line-item (see [PaymentScreen] for the same rule on the receipt).
 class FarePreviewScreen extends StatelessWidget {
-  const FarePreviewScreen({
+  FarePreviewScreen({
     super.key,
     this.destination = '',
     this.note = '',
@@ -27,9 +28,23 @@ class FarePreviewScreen extends StatelessWidget {
   final double distanceKm;
   final int etaMinutes;
 
+  // Loaded once per screen instance — admin's tarifa edits apply to the
+  // *next* quote a passenger opens, not retroactively to one in progress.
+  final Future<FareConfig> _configFuture = FareConfigStore().load();
+
   @override
   Widget build(BuildContext context) {
-    const service = FareService();
+    return FutureBuilder<FareConfig>(
+      future: _configFuture,
+      builder: (context, snapshot) {
+        final config = snapshot.data ?? const FareConfig();
+        return _buildScaffold(context, config);
+      },
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context, FareConfig config) {
+    final service = FareService(config: config);
     final quote = service.quote(distanceKm: distanceKm, etaMinutes: etaMinutes);
 
     return Scaffold(

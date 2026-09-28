@@ -86,6 +86,26 @@ class DiamondScreen extends StatelessWidget {
           const _BenefitTile(icon: Icons.bolt, label: 'Prioridad en asignación de viajes'),
           const _BenefitTile(icon: Icons.percent, label: 'Comisión preferencial'),
           const _BenefitTile(icon: Icons.support_agent, label: 'Soporte prioritario'),
+          const SizedBox(height: AppSpace.md),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpace.md, vertical: AppSpace.sm),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.info_outline, size: 14, color: AppTheme.textMuted),
+                SizedBox(width: AppSpace.sm),
+                Expanded(
+                  child: Text(
+                    'Beneficios en definición operativa — los criterios de arriba ya son la regla vigente; el alcance exacto de cada beneficio aún no está publicado.',
+                    style: TextStyle(color: AppTheme.textMuted, fontSize: 11),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

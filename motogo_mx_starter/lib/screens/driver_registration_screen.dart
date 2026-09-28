@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../models/driver_registration.dart';
+import '../services/driver_approval_service.dart';
 import '../services/driver_registration_store.dart';
 
 class DriverRegistrationScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class DriverRegistrationScreen extends StatefulWidget {
 
 class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final _store = DriverRegistrationStore();
+  final _approvalService = DriverApprovalService();
   final _localAuth = LocalAuthentication();
   var data = DriverRegistrationData();
   int currentStep = 0;
@@ -180,15 +182,22 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
             setState(() => currentStep++);
           } else {
             final ok = data.readyForReview;
-            ScaffoldMessenger.of(context).showSnackBar(
+            if (ok) {
+              await _approvalService.submit(data);
+            }
+            if (!mounted) return;
+            final messenger = ScaffoldMessenger.of(context);
+            final navigator = Navigator.of(context);
+            messenger.showSnackBar(
               SnackBar(
                 content: Text(
                   ok
-                      ? 'Registro enviado a revisión.'
+                      ? 'Registro enviado a revisión. Te avisaremos cuando tu cuenta esté aprobada.'
                       : 'Faltan datos obligatorios antes de enviar.',
                 ),
               ),
             );
+            if (ok) navigator.pop();
           }
         },
         onStepCancel: () {
@@ -320,7 +329,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           children: [
                             Text(name),
                             Text(
-                              photo != null ? 'Foto guardada' : 'Sin foto',
+                              photo != null ? 'Documento listo para revisión' : 'Sin foto',
                               style: TextStyle(fontSize: 12, color: photo != null ? Colors.green : Colors.grey),
                             ),
                           ],
