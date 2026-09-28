@@ -26,19 +26,21 @@ class AppRadius {
 /// Single source of truth for MotoGo MX's design system — dark, energetic,
 /// built for legibility outdoors (drivers checking the screen mid-ride).
 class AppTheme {
-  static const Color primaryYellow = Color(0xFFFFC800);
-  static const Color primaryYellowDeep = Color(0xFFE6A800);
-  static const Color accentRed = Color(0xFFEF4444);
-  static const Color background = Color(0xFF0D0F13);
-  static const Color surface = Color(0xFF1A1D24);
-  static const Color surfaceElevated = Color(0xFF21242C);
-  static const Color surfaceMuted = Color(0xFF23262E);
-  static const Color textLight = Color(0xFFF5F5F7);
-  static const Color textMuted = Color(0xFF9AA0AC);
-  static const Color success = Color(0xFF22C55E);
-  static const Color error = Color(0xFFEF4444);
+  // GA APP STANDARD 2026 — MotoGo MX obligatory palette (Paquete 01).
+  static const Color primaryYellow = Color(0xFFD4AF37); // Oro principal
+  static const Color primaryYellowDeep = Color(0xFFB8922A); // Oro, tono presionado/gradiente
+  static const Color goldLight = Color(0xFFF4D77A); // Oro claro para detalle
+  static const Color accentRed = Color(0xFFD92D20); // Error/SOS
+  static const Color background = Color(0xFF0B0B0B);
+  static const Color surface = Color(0xFF161616);
+  static const Color surfaceElevated = Color(0xFF1E1E1E);
+  static const Color surfaceMuted = Color(0xFF161616);
+  static const Color textLight = Color(0xFFFFFFFF);
+  static const Color textMuted = Color(0xFFC9C9C9);
+  static const Color success = Color(0xFF2EAD68);
+  static const Color error = Color(0xFFD92D20);
   static const Color warning = Color(0xFFF59E0B);
-  static const Color divider = Color(0xFF2E323C);
+  static const Color divider = Color(0xFF2A2A2A);
 
   /// Warm gradient for the app's primary calls-to-action — replaces flat
   /// yellow fills on the highest-priority buttons/hero cards.

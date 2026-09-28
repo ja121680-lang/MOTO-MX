@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config/app_config.dart';
+import 'l10n/app_strings.dart';
 import 'services/text_scale_service.dart';
 import 'theme/app_theme.dart';
 import 'screens/app_gate_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_shell_screen.dart';
 import 'screens/lock_screen.dart';
 import 'screens/pin_setup_screen.dart';
 import 'screens/privacy_consent_screen.dart';
@@ -35,6 +36,7 @@ Future<void> main() async {
     await Supabase.initialize(url: AppConfig.supabaseUrl, publishableKey: AppConfig.supabaseAnonKey);
   }
   await TextScaleController.instance.load();
+  await LocaleConfig.instance.load();
   runApp(const MotoGoApp());
 }
 
@@ -61,7 +63,7 @@ class MotoGoApp extends StatelessWidget {
         '/privacy-consent': (_) => const PrivacyConsentScreen(nextRoute: '/'),
         '/pin-setup': (_) => const PinSetupScreen(nextRoute: '/home'),
         '/lock': (_) => const LockScreen(nextRoute: '/home'),
-        '/home': (_) => const HomeScreen(),
+        '/home': (_) => const MainShellScreen(),
         '/request': (_) => const RequestRideScreen(),
         '/driver': (_) => const DriverScreen(),
         '/admin': (_) => const AdminScreen(),

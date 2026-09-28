@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../data/demo_driver_fixture.dart';
+import '../l10n/app_strings.dart';
 import '../theme/app_theme.dart';
+import 'live_tracking_screen.dart';
 
 enum MatchingState {
   searching,
@@ -30,17 +34,17 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
   String get title {
     switch (state) {
       case MatchingState.searching:
-        return 'Buscando conductor';
+        return S.t('Buscando conductor');
       case MatchingState.accepted:
-        return 'Conductor asignado';
+        return S.t('Conductor asignado');
       case MatchingState.arriving:
-        return 'Conductor en camino';
+        return S.t('Conductor en camino');
       case MatchingState.pin:
-        return 'Validar PIN';
+        return S.t('Validar PIN');
       case MatchingState.inProgress:
-        return 'Viaje en curso';
+        return S.t('Viaje en curso');
       case MatchingState.completed:
-        return 'Viaje completado';
+        return S.t('Viaje completado');
     }
   }
 
@@ -54,7 +58,6 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
       case MatchingState.pin:
         return AppTheme.warning;
       case MatchingState.inProgress:
-        return AppTheme.success;
       case MatchingState.completed:
         return AppTheme.success;
     }
@@ -90,20 +93,77 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('¿Cancelar viaje?'),
-        content: const Text('Se cancelará la búsqueda o el viaje en curso.'),
+        title: Text(S.t('¿Cancelar viaje?')),
+        content: Text(S.t('Se cancelará la búsqueda o el viaje en curso.')),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Seguir')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text(S.t('Seguir'))),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: AppTheme.error),
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Cancelar viaje'),
+            child: Text(S.t('Cancelar viaje')),
           ),
         ],
       ),
     );
     if (confirmed == true && mounted) {
       Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+  }
+
+  void _help() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppTheme.surfaceElevated,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(AppSpace.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(S.t('¿Necesitas ayuda?'), style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: AppSpace.md),
+            Text(
+              S.t('Si algo no va bien con tu viaje, usa el botón SOS para emergencias o cancela la solicitud.'),
+              style: const TextStyle(color: AppTheme.textMuted, height: 1.4),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool get _driverKnown => state != MatchingState.searching;
+
+  Future<void> _sos() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(S.t('¿Activar SOS?')),
+        content: Text(
+          S.t('Se notificará a tu contacto de emergencia y a soporte. Solo úsalo en una emergencia real.'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text(S.t('Cancelar'))),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppTheme.error),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(S.t('Sí, activar SOS')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppTheme.error,
+          content: Text(
+            S.t('SOS activado (función simulada) — integración real con contacto de emergencia pendiente.'),
+          ),
+        ),
+      );
     }
   }
 
@@ -123,7 +183,7 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
             IconButton(
               onPressed: _cancel,
               icon: const Icon(Icons.close),
-              tooltip: 'Cancelar',
+              tooltip: S.t('Cancelar'),
             ),
         ],
       ),
@@ -138,8 +198,8 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
                   child: state == MatchingState.searching
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            SizedBox(
+                          children: [
+                            const SizedBox(
                               width: 56,
                               height: 56,
                               child: CircularProgressIndicator(
@@ -147,32 +207,83 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
                                 strokeWidth: 3,
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
-                              'Buscando un conductor cercano...',
+                              S.t('Buscando un conductor cercano...'),
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: AppTheme.textMuted),
+                              style: const TextStyle(color: AppTheme.textMuted),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              S.t('Tiempo estimado: 2–4 min'),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: AppTheme.textMuted, fontSize: 12),
                             ),
                           ],
                         )
-                      : const Text(
-                          'Mapa / ubicación en tiempo real\nIntegración pendiente',
+                      : Text(
+                          S.t('Mapa / ubicación en tiempo real\nIntegración pendiente'),
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: AppTheme.textMuted),
+                          style: const TextStyle(color: AppTheme.textMuted),
                         ),
                 ),
               ),
             ),
-            if (state != MatchingState.searching) ...[
+            if (_driverKnown) ...[
               const SizedBox(height: 12),
-              const Card(
+              Card(
                 child: ListTile(
-                  leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text('Conductor demo · 4.9 ★'),
+                  leading: const CircleAvatar(child: Icon(Icons.person)),
+                  title: Text('${DemoDriverFixture.name} · ${DemoDriverFixture.rating} ★'),
                   subtitle: Text(
-                    'Moto demo · Placa ABC-123 · Económico 27 · Sindicato demo',
+                    '${DemoDriverFixture.motorcycle} · ${DemoDriverFixture.maskedPlate} · '
+                    '${S.t('Económico')} ${DemoDriverFixture.economicNumber} · ${DemoDriverFixture.union}',
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: state == MatchingState.inProgress
+                          ? () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const LiveTrackingScreen()),
+                              )
+                          : null,
+                      icon: const Icon(Icons.gps_fixed, size: 16),
+                      label: Text(S.t('Seguimiento'), style: const TextStyle(fontSize: 12)),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(S.t('Enlace de viaje generado (función simulada).'))),
+                      ),
+                      icon: const Icon(Icons.share_location, size: 16),
+                      label: Text(S.t('Compartir'), style: const TextStyle(fontSize: 12)),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _help,
+                      icon: const Icon(Icons.help_outline, size: 16),
+                      label: Text(S.t('Ayuda'), style: const TextStyle(fontSize: 12)),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: FilledButton.icon(
+                      style: FilledButton.styleFrom(backgroundColor: AppTheme.error),
+                      onPressed: _sos,
+                      icon: const Icon(Icons.sos, size: 16),
+                      label: Text(S.t('SOS'), style: const TextStyle(fontSize: 12)),
+                    ),
+                  ),
+                ],
               ),
             ],
             if (state == MatchingState.pin) ...[
@@ -181,39 +292,10 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
                 controller: pinController,
                 keyboardType: TextInputType.number,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'PIN de viaje',
-                  hintText: 'Demo: 1234',
+                decoration: InputDecoration(
+                  labelText: S.t('PIN de viaje'),
+                  hintText: S.t('Demo: 1234'),
                 ),
-              ),
-            ],
-            if (state == MatchingState.inProgress) ...[
-              const SizedBox(height: 12),
-              FilledButton.icon(
-                onPressed: () => Navigator.pushNamed(context, '/tracking'),
-                icon: const Icon(Icons.gps_fixed),
-                label: const Text('Abrir seguimiento en vivo'),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton.icon(
-                      style: FilledButton.styleFrom(backgroundColor: AppTheme.error),
-                      onPressed: () {},
-                      icon: const Icon(Icons.sos),
-                      label: const Text('SOS'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.share_location),
-                      label: const Text('Compartir'),
-                    ),
-                  ),
-                ],
               ),
             ],
             const SizedBox(height: 12),
@@ -223,12 +305,12 @@ class _RideMatchingScreenState extends State<RideMatchingScreen> {
                   : next,
               child: Text(
                 switch (state) {
-                  MatchingState.searching => 'Simular conductor disponible',
-                  MatchingState.accepted => 'Conductor inicia traslado',
-                  MatchingState.arriving => 'Conductor llegó',
-                  MatchingState.pin => 'Validar PIN',
-                  MatchingState.inProgress => 'Finalizar viaje',
-                  MatchingState.completed => 'Ir a pago',
+                  MatchingState.searching => S.t('Simular conductor disponible'),
+                  MatchingState.accepted => S.t('Conductor inicia traslado'),
+                  MatchingState.arriving => S.t('Conductor llegó'),
+                  MatchingState.pin => S.t('Validar PIN'),
+                  MatchingState.inProgress => S.t('Finalizar viaje'),
+                  MatchingState.completed => S.t('Ir a pago'),
                 },
               ),
             ),
