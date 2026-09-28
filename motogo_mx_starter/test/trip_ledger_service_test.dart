@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:motogo_mx/config/pricing_config.dart';
 import 'package:motogo_mx/models/trip_record.dart';
 import 'package:motogo_mx/services/trip_ledger_service.dart';
 
@@ -12,7 +13,6 @@ void main() {
           fare: 100,
           metodoPago: MetodoPago.efectivo,
           completedAt: DateTime(2026, 1, 1),
-          platformFeeRate: 0.10,
         ),
         TripRecord(
           id: '2',
@@ -20,7 +20,6 @@ void main() {
           fare: 50,
           metodoPago: MetodoPago.transferencia,
           completedAt: DateTime(2026, 1, 1),
-          platformFeeRate: 0.10,
         ),
         TripRecord(
           id: '3',
@@ -28,16 +27,16 @@ void main() {
           fare: 200,
           metodoPago: MetodoPago.efectivo,
           completedAt: DateTime(2026, 1, 1),
-          platformFeeRate: 0.10,
         ),
       ];
 
       final corte = calcularCorteDeCaja(trips);
 
+      expect(PricingConfig.platformFeeRate, 0.08);
       expect(corte.tripCount, 3);
       expect(corte.totalFare, 350);
-      expect(corte.totalPlatformFee, closeTo(35, 0.001));
-      expect(corte.totalDriverNet, closeTo(315, 0.001));
+      expect(corte.totalPlatformFee, closeTo(28, 0.001));
+      expect(corte.totalDriverNet, closeTo(322, 0.001));
       expect(corte.countByMetodo[MetodoPago.efectivo], 2);
       expect(corte.totalByMetodo[MetodoPago.efectivo], 300);
       expect(corte.countByMetodo[MetodoPago.transferencia], 1);
@@ -59,18 +58,18 @@ void main() {
       final t = TripRecord(
         id: 'x',
         route: 'Centro -> Playa',
-        fare: 90,
+        fare: 100,
         metodoPago: MetodoPago.app,
         completedAt: DateTime(2026, 3, 4, 10, 30),
-        platformFeeRate: 0.10,
       );
-      expect(t.platformFee, closeTo(9.0, 0.001));
-      expect(t.driverNet, closeTo(81.0, 0.001));
+      expect(t.platformFeeRate, 0.08);
+      expect(t.platformFee, closeTo(8.0, 0.001));
+      expect(t.driverNet, closeTo(92.0, 0.001));
 
       final restored = TripRecord.fromJson(t.toJson());
-      expect(restored.fare, 90);
+      expect(restored.fare, 100);
       expect(restored.metodoPago, MetodoPago.app);
-      expect(restored.platformFeeRate, 0.10);
+      expect(restored.platformFeeRate, 0.08);
     });
   });
 }

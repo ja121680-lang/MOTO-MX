@@ -18,7 +18,7 @@ class ActivityScreen extends StatefulWidget {
 
 class _ActivityScreenState extends State<ActivityScreen> {
   final _ledger = TripLedgerService();
-  late Future<List<TripRecord>> _trips = _ledger.getTrips();
+  late final Future<List<TripRecord>> _trips = _ledger.getTrips();
 
   @override
   Widget build(BuildContext context) {

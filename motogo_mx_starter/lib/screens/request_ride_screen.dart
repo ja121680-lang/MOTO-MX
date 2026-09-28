@@ -133,7 +133,7 @@ class _RequestRideScreenState extends State<RequestRideScreen> {
             decoration: BoxDecoration(
               color: AppTheme.surfaceElevated,
               borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(color: AppTheme.primaryYellow.withOpacity(0.3)),
+              border: Border.all(color: AppTheme.primaryYellow.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
@@ -221,7 +221,7 @@ class _SelectableCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: AppSpace.md, horizontal: AppSpace.sm),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primaryYellow.withOpacity(0.12) : AppTheme.surfaceMuted,
+          color: selected ? AppTheme.primaryYellow.withValues(alpha: 0.12) : AppTheme.surfaceMuted,
           borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: selected ? AppTheme.primaryYellow : AppTheme.divider),
         ),

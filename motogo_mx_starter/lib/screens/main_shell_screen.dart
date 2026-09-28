@@ -57,7 +57,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
         selectedIndex: index,
         onDestinationSelected: (value) => setState(() => index = value),
         backgroundColor: AppTheme.surface,
-        indicatorColor: AppTheme.primaryYellow.withOpacity(0.18),
+        indicatorColor: AppTheme.primaryYellow.withValues(alpha: 0.18),
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),

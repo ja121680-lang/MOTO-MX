@@ -62,7 +62,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
           const SizedBox(height: AppSpace.lg),
           DropdownButtonFormField<MetodoPago>(
-            value: method,
+            initialValue: method,
             items: MetodoPago.values
                 .map((m) => DropdownMenuItem(value: m, child: Text(S.t(m.label))))
                 .toList(),

@@ -4,6 +4,21 @@ Implementado sobre `motogo_mx_starter`, rama `claude/autonomous-app-production`.
 No se borró ningún archivo, flujo ni lógica de negocio existente; no se hizo
 despliegue a producción.
 
+**Nota sobre esta versión:** otra sesión estaba trabajando la misma rama en
+paralelo (mismo SDK de Flutter más reciente, migración `withOpacity` →
+`withValues`/`CardTheme` → `CardThemeData`/dropdown `value` → `initialValue`,
+`flutter_lints` agregado, y una corrección de negocio real: la comisión de
+plataforma volvió de 10% a **8%**, con su propia migración de Supabase). Este
+commit es un merge de ambos trabajos: se tomaron íntegras sus correcciones de
+API/lints y la corrección de la comisión (consistente con este mismo paquete,
+que especifica 8%), y se conservó el contenido de este paquete (paleta exacta,
+navegación, i18n, las 6 pantallas) adaptado a la API más nueva. `flutter
+analyze`/`flutter test` se verificaron localmente forzando temporalmente
+`flutter_lints` a una versión compatible con el SDK 3.24.5 de este entorno
+(el SDK más nuevo no se pudo instalar aquí por la política de red del
+sandbox); el pubspec final que se commitea es el real (`flutter_lints
+^6.0.0`), validado además por el propio `GA Quality Gate` de CI.
+
 ## Cambios
 
 ### Diseño obligatorio GA

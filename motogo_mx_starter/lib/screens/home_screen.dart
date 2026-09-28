@@ -63,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceElevated,
                     borderRadius: BorderRadius.circular(AppRadius.lg),
-                    border: Border.all(color: AppTheme.primaryYellow.withOpacity(0.5), width: 1.5),
+                    border: Border.all(color: AppTheme.primaryYellow.withValues(alpha: 0.5), width: 1.5),
                     boxShadow: AppTheme.glow(AppTheme.primaryYellow),
                   ),
                   child: Row(
