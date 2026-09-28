@@ -37,7 +37,7 @@
 
 - `complete_trip(trip_id)`
   - fija tarifa final
-  - calcula comisión 8%
+  - calcula comisión 10%
   - calcula neto del conductor
   - crea movimientos de wallet
   - deja pago pendiente o pagado según método

@@ -3,7 +3,7 @@
 ```mermaid
 flowchart TD
     A[Viaje completado] --> B[Tarifa final]
-    B --> C[Comisión 8%]
+    B --> C[Comisión 10%]
     C --> D[Neto conductor 92%]
     B --> E{Método de pago}
     E -->|Efectivo| F[Registrar cobro]

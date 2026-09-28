@@ -1,3 +1,5 @@
+import '../config/pricing_config.dart';
+
 class FareQuote {
   final double distanceKm;
   final int etaMinutes;
@@ -15,6 +17,6 @@ class FareQuote {
     required this.totalFare,
   });
 
-  double get platformFee => totalFare * 0.08;
+  double get platformFee => totalFare * PricingConfig.platformFeeRate;
   double get driverNet => totalFare - platformFee;
 }

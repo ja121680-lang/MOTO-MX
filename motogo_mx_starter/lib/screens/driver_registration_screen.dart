@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/local_auth.dart';
+
 import '../models/driver_registration.dart';
+import '../services/driver_approval_service.dart';
+import '../services/driver_registration_store.dart';
 
 class DriverRegistrationScreen extends StatefulWidget {
   const DriverRegistrationScreen({super.key});
@@ -10,8 +17,13 @@ class DriverRegistrationScreen extends StatefulWidget {
 }
 
 class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
-  final data = DriverRegistrationData();
+  final _store = DriverRegistrationStore();
+  final _approvalService = DriverApprovalService();
+  final _localAuth = LocalAuthentication();
+  var data = DriverRegistrationData();
   int currentStep = 0;
+  bool _loading = true;
+  bool _checkingBiometrics = false;
 
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -22,6 +34,29 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final colorController = TextEditingController();
   final economicController = TextEditingController();
   final unionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDraft();
+  }
+
+  Future<void> _loadDraft() async {
+    final saved = await _store.load();
+    if (saved != null) {
+      data = saved;
+      nameController.text = data.fullName;
+      phoneController.text = data.phone;
+      emailController.text = data.email;
+      plateController.text = data.plate;
+      makeController.text = data.make;
+      modelController.text = data.model;
+      colorController.text = data.color;
+      economicController.text = data.economicNumber;
+      unionController.text = data.unionName;
+    }
+    if (mounted) setState(() => _loading = false);
+  }
 
   @override
   void dispose() {
@@ -53,27 +88,116 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
     data.unionName = unionController.text;
   }
 
+  Future<void> _saveDraft() async {
+    syncData();
+    await _store.save(data);
+  }
+
+  Future<void> _verifyBiometrics() async {
+    if (_checkingBiometrics) return;
+    setState(() => _checkingBiometrics = true);
+    try {
+      final supported = await _localAuth.isDeviceSupported();
+      final canCheck = await _localAuth.canCheckBiometrics;
+      if (!supported || !canCheck) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Este dispositivo no tiene biometría disponible o configurada.'),
+          ),
+        );
+        return;
+      }
+
+      final verified = await _localAuth.authenticate(
+        localizedReason: 'Verifica tu identidad para el registro de conductor MotoGo MX',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
+      );
+      if (!mounted) return;
+      if (verified) {
+        setState(() => data.biometricVerified = true);
+        await _saveDraft();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Biometría verificada en este dispositivo.')),
+        );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se pudo completar la verificación biométrica. Revisa la configuración del dispositivo.'),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _checkingBiometrics = false);
+    }
+  }
+
+  Future<void> _captureDocument(String name) async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt_outlined),
+              title: const Text('Tomar foto'),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text('Elegir de la galería'),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (source == null) return;
+    final picked = await ImagePicker().pickImage(source: source, maxWidth: 1600, imageQuality: 80);
+    if (picked == null) return;
+    final bytes = await picked.readAsBytes();
+    setState(() => data.documentPhotos[name] = base64Encode(bytes));
+    await _saveDraft();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('Registro de conductor')),
       body: Stepper(
         currentStep: currentStep,
-        onStepContinue: () {
-          syncData();
+        onStepContinue: () async {
+          await _saveDraft();
+          if (!mounted) return;
           if (currentStep < 5) {
             setState(() => currentStep++);
           } else {
             final ok = data.readyForReview;
-            ScaffoldMessenger.of(context).showSnackBar(
+            if (ok) {
+              await _approvalService.submit(data);
+            }
+            if (!mounted) return;
+            final messenger = ScaffoldMessenger.of(context);
+            final navigator = Navigator.of(context);
+            messenger.showSnackBar(
               SnackBar(
                 content: Text(
                   ok
-                      ? 'Registro enviado a revisión.'
+                      ? 'Registro enviado a revisión. Te avisaremos cuando tu cuenta esté aprobada.'
                       : 'Faltan datos obligatorios antes de enviar.',
                 ),
               ),
             );
+            if (ok) navigator.pop();
           }
         },
         onStepCancel: () {
@@ -92,10 +216,12 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 ),
                 TextField(
                   controller: phoneController,
+                  keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(labelText: 'Teléfono'),
                 ),
                 TextField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(labelText: 'Correo opcional'),
                 ),
               ],
@@ -103,13 +229,37 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           ),
           Step(
             title: const Text('Biometría'),
-            content: SwitchListTile(
-              value: data.biometricVerified,
-              onChanged: (v) => setState(() => data.biometricVerified = v),
-              title: const Text('Biometría verificada'),
-              subtitle: const Text(
-                'Simulación por ahora; después se conecta proveedor real.',
-              ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(
+                    data.biometricVerified ? Icons.verified_user : Icons.fingerprint,
+                    color: data.biometricVerified ? Colors.green : null,
+                  ),
+                  title: Text(
+                    data.biometricVerified ? 'Biometría verificada' : 'Verificación pendiente',
+                  ),
+                  subtitle: const Text(
+                    'La verificación usa la huella o biometría configurada en tu propio dispositivo. MotoGo MX no recibe tu huella digital.',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                FilledButton.icon(
+                  onPressed: data.biometricVerified || _checkingBiometrics ? null : _verifyBiometrics,
+                  icon: _checkingBiometrics
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.fingerprint),
+                  label: Text(
+                    data.biometricVerified ? 'Identidad verificada' : 'Verificar huella / biometría',
+                  ),
+                ),
+              ],
             ),
           ),
           Step(
@@ -154,13 +304,43 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           Step(
             title: const Text('Documentos'),
             content: Column(
-              children: data.documents.keys.map((name) {
-                return CheckboxListTile(
-                  value: data.documents[name],
-                  onChanged: (v) =>
-                      setState(() => data.documents[name] = v ?? false),
-                  title: Text(name),
-                  subtitle: const Text('Carga simulada'),
+              children: kDriverDocumentNames.map((name) {
+                final photo = data.documentPhotos[name];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    children: [
+                      if (photo != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.memory(base64Decode(photo), width: 48, height: 48, fit: BoxFit.cover),
+                        )
+                      else
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)),
+                          child: const Icon(Icons.description_outlined, color: Colors.grey),
+                        ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(name),
+                            Text(
+                              photo != null ? 'Documento listo para revisión' : 'Sin foto',
+                              style: TextStyle(fontSize: 12, color: photo != null ? Colors.green : Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => _captureDocument(name),
+                        child: Text(photo != null ? 'Cambiar' : 'Agregar foto'),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             ),

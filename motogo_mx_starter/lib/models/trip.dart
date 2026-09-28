@@ -1,3 +1,5 @@
+import '../config/pricing_config.dart';
+
 enum TripStatus {
   requested,
   accepted,
@@ -22,7 +24,7 @@ class Trip {
     this.driverId,
     required this.status,
     required this.quotedFare,
-    this.platformFeeRate = 0.08,
+    this.platformFeeRate = PricingConfig.platformFeeRate,
   });
 
   double get platformFee => quotedFare * platformFeeRate;
