@@ -157,7 +157,7 @@ class FarePreviewScreen extends StatelessWidget {
                 Expanded(
                   child: Text(
                     S.t('Solo inicia cuando confirmes el PIN con tu conductor.'),
-                    style: const TextStyle(color: AppTheme.textMuted, fontSize: 11),
+                    style: const TextStyle(color: AppTheme.textMuted, fontSize: 13),
                   ),
                 ),
               ],

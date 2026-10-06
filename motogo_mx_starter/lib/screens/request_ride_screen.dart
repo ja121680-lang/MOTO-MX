@@ -155,7 +155,7 @@ class _RequestRideScreenState extends State<RequestRideScreen> {
                             ),
                             child: Text(
                               S.t('Datos simulados'),
-                              style: const TextStyle(fontSize: 10, color: AppTheme.textMuted),
+                              style: const TextStyle(fontSize: 12.5, color: AppTheme.textMuted),
                             ),
                           ),
                         ],
