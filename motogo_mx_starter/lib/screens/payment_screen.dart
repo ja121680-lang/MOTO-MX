@@ -73,7 +73,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             const SizedBox(height: AppSpace.sm),
             Text(
               S.t('Pago simulado — proveedor de pagos real pendiente de integrar.'),
-              style: const TextStyle(color: AppTheme.textMuted, fontSize: 11),
+              style: const TextStyle(color: AppTheme.textMuted, fontSize: 13),
             ),
           ],
           const SizedBox(height: AppSpace.xl),
