@@ -118,7 +118,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   Expanded(
                     child: Text(
                       S.t('Los pagos y retiros reales requieren validación operativa.'),
-                      style: const TextStyle(color: AppTheme.textMuted, fontSize: 11),
+                      style: const TextStyle(color: AppTheme.textMuted, fontSize: 13),
                     ),
                   ),
                 ],
@@ -167,7 +167,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       subtitle: Text(
                         '${S.t('Bruto')} \$${t.fare.toStringAsFixed(2)} · ${S.t('Comisión')} '
                         '\$${t.platformFee.toStringAsFixed(2)} · ${_formatDate(t.completedAt)}',
-                        style: const TextStyle(fontSize: 11),
+                        style: const TextStyle(fontSize: 13),
                       ),
                       trailing: Text(
                         '+\$${t.driverNet.toStringAsFixed(2)}',
