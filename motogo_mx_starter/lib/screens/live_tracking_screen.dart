@@ -185,7 +185,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(S.t('ETA'), style: const TextStyle(color: AppTheme.textMuted, fontSize: 11)),
+                        Text(S.t('ETA'), style: const TextStyle(color: AppTheme.textMuted, fontSize: 13)),
                         const Text('4 min',
                             style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryYellow)),
                       ],
